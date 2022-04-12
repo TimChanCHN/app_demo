@@ -4,6 +4,8 @@
 #include "usart.h"
 #include "hk_usart.h"
 #include "gpio.h"
+#include "systick.h"
+#include "hk_systick.h"
 
 extern hk_uart_info_t g_hk_uart_info;
 extern hk_uart_config_t g_hk_uart_config;

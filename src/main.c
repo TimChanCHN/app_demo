@@ -7,6 +7,8 @@
 
 int main(void)
 {
+  hk_systick_init();
+
   trace_init();
 
   g_led_obj.gpio_ops.gpio_init(&g_led_obj.gpio_cfg);
@@ -16,6 +18,9 @@ int main(void)
   trace_debug("debug\r\n");
   while (1)
   {
-
+    g_led_obj.gpio_ops.gpio_output_set(&g_led_obj.gpio_cfg, 1);
+    hk_delay_ms(1000);
+    g_led_obj.gpio_ops.gpio_output_set(&g_led_obj.gpio_cfg, 0);
+    hk_delay_ms(1000);
   }
 }

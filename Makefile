@@ -53,7 +53,8 @@ $(SDK_DIR)/platform/hk/HK32F103/STD_LIB/src/stm32f10x_usart.c	\
 $(SDK_DIR)/components/trace/trace.c	\
 $(SDK_DIR)/customized/hal/usart/retarget.c	\
 $(SDK_DIR)/customized/hk_lib/f1/usart/hk_usart.c	\
-$(SDK_DIR)/customized/hk_lib/f1/gpio/hk_gpio.c
+$(SDK_DIR)/customized/hk_lib/f1/gpio/hk_gpio.c	\
+$(SDK_DIR)/customized/hk_lib/f1/systick/hk_systick.c
 
 # C includes
 C_INCLUDES =  \
@@ -71,6 +72,7 @@ C_INCLUDES =  \
 -I$(SDK_DIR)/customized/hal/usart	\
 -I$(SDK_DIR)/customized/hk_lib/f1/usart	\
 -I$(SDK_DIR)/customized/hk_lib/f1/gpio	\
+-I$(SDK_DIR)/customized/hk_lib/f1/systick	\
 -I$(SDK_DIR)/components/trace
 
 # ASM sources
