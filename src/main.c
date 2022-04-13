@@ -7,20 +7,33 @@
 
 int main(void)
 {
-  hk_systick_init();
+  uint8_t flag = 0;
+  uint32_t count = g_systick_obj.systick_ops.systick_get(&g_systick_obj.systick_cfg);
+
+  g_systick_obj.systick_ops.systick_init(&g_systick_obj.systick_cfg);
 
   trace_init();
 
   g_led_obj.gpio_ops.gpio_init(&g_led_obj.gpio_cfg);
   g_led_obj.gpio_ops.gpio_output_set(&g_led_obj.gpio_cfg, 0);
 
+  g_systick_obj.systick_ops.delay_us(&g_systick_obj.systick_cfg, 1000);
   trace_info("loop\r\n");
   trace_debug("debug\r\n");
   while (1)
   {
+    #if 1
     g_led_obj.gpio_ops.gpio_output_set(&g_led_obj.gpio_cfg, 1);
-    hk_delay_ms(1000);
+    g_systick_obj.systick_ops.delay_ms(&g_systick_obj.systick_cfg, 1000);
     g_led_obj.gpio_ops.gpio_output_set(&g_led_obj.gpio_cfg, 0);
-    hk_delay_ms(1000);
+    g_systick_obj.systick_ops.delay_ms(&g_systick_obj.systick_cfg, 1000);
+    #else
+    if (g_systick_obj.systick_ops.systick_get(&g_systick_obj.systick_cfg) - count > 1000)
+    {
+      count = g_systick_obj.systick_ops.systick_get(&g_systick_obj.systick_cfg);
+      flag = !flag;
+    }
+    g_led_obj.gpio_ops.gpio_output_set(&g_led_obj.gpio_cfg, flag);
+    #endif
   }
 }

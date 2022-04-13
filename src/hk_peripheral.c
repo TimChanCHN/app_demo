@@ -9,6 +9,23 @@
 
 #include "hk_peripheral.h"
 
+// systick设置
+systick_object_t g_systick_obj = {
+    .systick_cfg = {
+        .clk_div    =   SysTick_CLKSource_HCLK_Div8,
+        .us_ticks   =   9,
+        .ticks_per_sec  =   1000,
+        .p_systick  =   0,
+    },
+    .systick_ops = {
+        .systick_init   = hk_systick_obj_init,
+        .delay_us       = hk_delay_us,
+        .delay_ms       = hk_delay_ms,
+        .systick_get    = hk_systick_get,
+    },
+};
+
+
 hk_uart_info_t g_hk_uart_info = {
     .uart = USART1,
     .tx_port = TRACE_UART_TX_GPIO_PORT,
