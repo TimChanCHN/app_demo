@@ -13,6 +13,7 @@ int main(void)
   g_systick_obj.systick_ops.systick_init(&g_systick_obj.systick_cfg);
 
   trace_init();
+  letter_shell_init();
 
   g_led_obj.gpio_ops.gpio_init(&g_led_obj.gpio_cfg);
   g_led_obj.gpio_ops.gpio_output_set(&g_led_obj.gpio_cfg, 0);

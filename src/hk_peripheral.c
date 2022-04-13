@@ -63,6 +63,8 @@ usart_object_t g_usart_object = {
       .usart_put = hk_uart_obj_put,
 #elif defined(__GNUC__)   
       .usart_write = hk_uart_obj_put,
+      .usart_write_buffer = hk_uart_obj_puts,
+      .usart_read_buffer  = hk_uart_obj_gets,
 #endif
   }
 };
