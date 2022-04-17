@@ -43,6 +43,7 @@ $(info PLATFORM: $(PLATFORM))
 # C sources
 C_SOURCES =  			\
 src/main.c 				\
+src/nt_handler.c 				\
 src/hk_peripheral.c 	\
 src/stm32f10x_it.c  		\
 core/system_stm32f10x.c	\
@@ -55,6 +56,12 @@ $(SDK_DIR)/components/letter-shell/src/shell_cmd_list.c	\
 $(SDK_DIR)/components/letter-shell/src/shell_companion.c	\
 $(SDK_DIR)/components/letter-shell/src/shell_ext.c	\
 $(SDK_DIR)/components/letter-shell/src/shell.c	\
+$(SDK_DIR)/components/ntshell/core/ntshell.c	\
+$(SDK_DIR)/components/ntshell/core/ntlibc.c	\
+$(SDK_DIR)/components/ntshell/core/text_editor.c	\
+$(SDK_DIR)/components/ntshell/core/text_history.c	\
+$(SDK_DIR)/components/ntshell/core/vtrecv.c	\
+$(SDK_DIR)/components/ntshell/core/vtsend.c	\
 $(SDK_DIR)/customized/hal/letter_shell/letter_handler.c \
 $(SDK_DIR)/customized/hal/usart/retarget.c	\
 $(SDK_DIR)/customized/hk_lib/f1/usart/hk_usart.c	\
@@ -73,6 +80,8 @@ C_INCLUDES =  \
 -I$(SDK_DIR)/components/util	\
 -I$(SDK_DIR)/components/lib_err	\
 -I$(SDK_DIR)/components/letter-shell/src \
+-I$(SDK_DIR)/components/ntshell/core \
+-I$(SDK_DIR)/components/ntshell/util \
 -I$(SDK_DIR)/customized/hal/gpio	\
 -I$(SDK_DIR)/customized/hal/systick	\
 -I$(SDK_DIR)/customized/hal/usart	\
