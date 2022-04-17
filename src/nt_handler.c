@@ -2,6 +2,7 @@
 #include "ntshell.h"
 #include "ntlibc.h"
 #include "usart.h"
+#include "ntshell_usrcmd.h"
 
 static ntshell_t ntshell;
 
@@ -24,32 +25,31 @@ static int func_write(const char *buf, int cnt, void *extobj)
 }
 
 
-static int func_callback(const char *text, void *extobj)
-{
-    ntshell_t *ntshell = (ntshell_t *)extobj;
-    char *buff1 = "User input text:'";
-    char *buff2 = "'\r\n";
-
-    if (ntlibc_strlen(text) > 0) {
-        // g_usart_object.usart_ops.usart_write_buffer(buff1, ntlibc_strlen(text));
-        // g_usart_object.usart_ops.usart_write_buffer(text, ntlibc_strlen(text));
-        // g_usart_object.usart_ops.usart_write_buffer(buff2, ntlibc_strlen(text));
-
-        g_usart_object.usart_ops.usart_put_string("User input text:'");
-        g_usart_object.usart_ops.usart_put_string(text);
-        g_usart_object.usart_ops.usart_put_string("'\r\n");
-    }
-    return 0;
-}
-
 void init_nt_shell(void)
 {
+    // 1. 初始化命令列表
+    extern const unsigned int _shell_command_start;
+    extern const unsigned int _shell_command_end;
+
+    uint16_t i = 0;
+    // uint16_t cmd_count = ((unsigned int)(&_shell_command_end)
+    //                         - (unsigned int)(&_shell_command_start)) / sizeof(cmd_table_t);
+    uint16_t cmd_count =  ((unsigned int)(&_shell_command_end)
+                                - (unsigned int)(&_shell_command_start))
+                                / sizeof(cmd_table_t);
+
+    for (i = 0; i < cmd_count; i++)
+    {
+
+    }
+
+    // 2. 初始化nt-shell
     ntshell_init(
         &ntshell,
         func_read,
         func_write,
-        func_callback,
-        (void *)&ntshell);
+        ntshell_usrcmd_execute,
+        (void *)&g_usart_object);
 
     ntshell_set_prompt(&ntshell, "ntshell>");
     ntshell_execute(&ntshell);

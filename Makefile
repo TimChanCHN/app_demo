@@ -47,6 +47,7 @@ src/nt_handler.c 				\
 src/hk_peripheral.c 	\
 src/stm32f10x_it.c  		\
 core/system_stm32f10x.c	\
+handler/nt_shell/ntshell_usrcmd.c	\
 $(SDK_DIR)/platform/hk/HK32F103/STD_LIB/src/stm32f10x_gpio.c	\
 $(SDK_DIR)/platform/hk/HK32F103/STD_LIB/src/misc.c	\
 $(SDK_DIR)/platform/hk/HK32F103/STD_LIB/src/stm32f10x_rcc.c	\
@@ -62,6 +63,8 @@ $(SDK_DIR)/components/ntshell/core/text_editor.c	\
 $(SDK_DIR)/components/ntshell/core/text_history.c	\
 $(SDK_DIR)/components/ntshell/core/vtrecv.c	\
 $(SDK_DIR)/components/ntshell/core/vtsend.c	\
+$(SDK_DIR)/components/ntshell/util/ntopt.c	\
+$(SDK_DIR)/components/ntshell/util/ntstdio.c	\
 $(SDK_DIR)/customized/hal/letter_shell/letter_handler.c \
 $(SDK_DIR)/customized/hal/usart/retarget.c	\
 $(SDK_DIR)/customized/hk_lib/f1/usart/hk_usart.c	\
@@ -74,6 +77,7 @@ C_INCLUDES =  \
 -Ibsp \
 -Icore \
 -Ihandler \
+-Ihandler/nt_shell	\
 -I$(SDK_DIR)/platform/hk/HK32F103/STD_LIB/inc \
 -I$(SDK_DIR)/platform/hk/HK32F103/CMSIS/CM3/DeviceSupport \
 -I$(SDK_DIR)/platform/hk/HK32F103/CMSIS/CM3/CoreSupport	\
