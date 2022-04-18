@@ -47,6 +47,7 @@ src/nt_handler.c 				\
 src/hk_peripheral.c 	\
 src/stm32f10x_it.c  		\
 core/system_stm32f10x.c	\
+handler/cmd_management/cmd_management.c	\
 handler/nt_shell/ntshell_usrcmd.c	\
 $(SDK_DIR)/platform/hk/HK32F103/STD_LIB/src/stm32f10x_gpio.c	\
 $(SDK_DIR)/platform/hk/HK32F103/STD_LIB/src/misc.c	\
@@ -78,6 +79,7 @@ C_INCLUDES =  \
 -Icore \
 -Ihandler \
 -Ihandler/nt_shell	\
+-Ihandler/cmd_management	\
 -I$(SDK_DIR)/platform/hk/HK32F103/STD_LIB/inc \
 -I$(SDK_DIR)/platform/hk/HK32F103/CMSIS/CM3/DeviceSupport \
 -I$(SDK_DIR)/platform/hk/HK32F103/CMSIS/CM3/CoreSupport	\

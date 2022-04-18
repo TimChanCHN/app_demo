@@ -70,13 +70,13 @@ typedef struct {
 
 
 #define NTSHELL_EXPORT_CMD(_name, _desc, _func) \
-        const char shellCmd##_name[] = #_name; \
-        const char shellDesc##_name[] = #_desc; \
+        const char ntshellCmd##_name[] = #_name; \
+        const char ntshellDesc##_name[] = #_desc; \
         NTSHELL_USED const cmd_table_t \
-        shellCommand##_name NTSHELL_SECTION("shellCommand") =  \
+        ntshellCommand##_name NTSHELL_SECTION("ntshellCommand") =  \
         { \
-            .cmd = shellCmd##_name, \
-            .desc = shellDesc##_name, \
+            .cmd = ntshellCmd##_name, \
+            .desc = ntshellDesc##_name, \
             .func = (ntshell_call_func)_func, \
         }
 
@@ -84,7 +84,7 @@ typedef struct {
 int ntshell_register( char *cmd,  char *desc, ntshell_call_func call);
 int ntshell_usrcmd_execute(const char *text, void *extobj);
 
-// extern cmd_table_t cmdlist;
+extern cmd_table_t cmdlist[];
 
 #endif
 

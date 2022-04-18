@@ -104,6 +104,10 @@ SECTIONS
     KEEP (*(shellCommand))
     _shell_command_end = .;
     . = ALIGN(4);
+    _ntshell_command_start = .;
+    KEEP (*(ntshellCommand))
+    _ntshell_command_end = .;
+    . = ALIGN(4);
   } >FLASH
 
   .ARM.extab   : { *(.ARM.extab* .gnu.linkonce.armextab.*) } >FLASH
