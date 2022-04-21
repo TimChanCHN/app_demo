@@ -37,6 +37,7 @@ hk_uart_info_t g_hk_uart_info = {
     .tx_pin = TRACE_UART_TX_PIN,
     .rx_pin = TRACE_UART_RX_PIN,
 
+    .uart_id = HK_UART_1,
 };
 
 hk_uart_config_t g_hk_uart_config = {

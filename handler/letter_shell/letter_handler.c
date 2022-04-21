@@ -3,7 +3,7 @@
 #include "usart.h"
 
 static Shell shell;
-static char shellBuffer[512];
+static char shellBuffer[128];
 
 
 /**
@@ -16,7 +16,7 @@ static char shellBuffer[512];
  */
 short userShellWrite(char *data, unsigned short len)
 {
-    g_usart_object.usart_ops.usart_write_buffer(data, len);
+    g_usart_object.usart_ops.usart_write_buffer((uint8_t *)data, len);
     return len;
 }
 
@@ -30,11 +30,8 @@ short userShellWrite(char *data, unsigned short len)
  */
 short userShellRead(char *data, unsigned short len)
 {
-    g_usart_object.usart_ops.usart_read_buffer(data, len);
-
-    return len;
+    return g_usart_object.usart_ops.usart_read_buffer((uint8_t *)data, len);
 }
-
 
 Shell get_shell(void)
 {
@@ -46,17 +43,10 @@ void letter_shell_init(void)
 
     shell.write = userShellWrite;
     shell.read = userShellRead;
-    shellInit(&shell, shellBuffer, 512);
+    shellInit(&shell, shellBuffer, sizeof(shellBuffer));
 
     shellTask(&shell);
 
-    // while (1)
-    // {
-    //     usart_get_chars(&m_usart_obj, buff, 10);
-    //     usart_put_string(&m_usart_obj, "\n\r");
-    //     usart_put_chars(&m_usart_obj, buff, 10);
-    // }
-    
 
 }
 

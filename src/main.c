@@ -19,8 +19,6 @@ int main(void)
   letter_shell_init();
   // init_nt_shell();
 
-  g_led_obj.gpio_ops.gpio_output_set(&g_led_obj.gpio_cfg, 0);
-
   g_systick_obj.systick_ops.delay_us(&g_systick_obj.systick_cfg, 1000);
   // trace_info("loop\r\n");
   // trace_debug("debug\r\n");
