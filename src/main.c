@@ -16,8 +16,8 @@ int main(void)
   g_led_obj.gpio_ops.gpio_output_set(&g_led_obj.gpio_cfg, 1);
 
   trace_init();
-  // letter_shell_init();
-  init_nt_shell();
+  letter_shell_init();
+  // init_nt_shell();
 
   g_led_obj.gpio_ops.gpio_output_set(&g_led_obj.gpio_cfg, 0);
 

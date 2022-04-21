@@ -48,7 +48,7 @@ src/hk_peripheral.c 	\
 src/stm32f10x_it.c  		\
 core/system_stm32f10x.c	\
 handler/cmd_management/cmd_management.c	\
-handler/nt_shell/ntshell_usrcmd.c	\
+handler/letter_shell/letter_handler.c \
 $(SDK_DIR)/platform/hk/HK32F103/STD_LIB/src/stm32f10x_gpio.c	\
 $(SDK_DIR)/platform/hk/HK32F103/STD_LIB/src/misc.c	\
 $(SDK_DIR)/platform/hk/HK32F103/STD_LIB/src/stm32f10x_rcc.c	\
@@ -62,6 +62,7 @@ $(SDK_DIR)/components/ntshell/core/vtrecv.c	\
 $(SDK_DIR)/components/ntshell/core/vtsend.c	\
 $(SDK_DIR)/components/ntshell/util/ntopt.c	\
 $(SDK_DIR)/components/ntshell/util/ntstdio.c	\
+$(SDK_DIR)/components/ntshell/usrcmd/ntshell_usrcmd.c	\
 $(SDK_DIR)/customized/hal/usart/retarget.c	\
 $(SDK_DIR)/customized/hk_lib/f1/usart/hk_usart.c	\
 $(SDK_DIR)/customized/hk_lib/f1/gpio/hk_gpio.c	\
@@ -70,7 +71,6 @@ $(SDK_DIR)/components/letter-shell/src/shell_cmd_list.c	\
 $(SDK_DIR)/components/letter-shell/src/shell_companion.c	\
 $(SDK_DIR)/components/letter-shell/src/shell_ext.c	\
 $(SDK_DIR)/components/letter-shell/src/shell.c	\
-$(SDK_DIR)/customized/hal/letter_shell/letter_handler.c \
 
 # C includes
 C_INCLUDES =  \
@@ -78,8 +78,8 @@ C_INCLUDES =  \
 -Ibsp \
 -Icore \
 -Ihandler \
--Ihandler/nt_shell	\
 -Ihandler/cmd_management	\
+-Ihandler/letter_shell	\
 -I$(SDK_DIR)/platform/hk/HK32F103/STD_LIB/inc \
 -I$(SDK_DIR)/platform/hk/HK32F103/CMSIS/CM3/DeviceSupport \
 -I$(SDK_DIR)/platform/hk/HK32F103/CMSIS/CM3/CoreSupport	\
@@ -87,6 +87,7 @@ C_INCLUDES =  \
 -I$(SDK_DIR)/components/lib_err	\
 -I$(SDK_DIR)/components/letter-shell/src \
 -I$(SDK_DIR)/components/ntshell/core \
+-I$(SDK_DIR)/components/ntshell/usrcmd	\
 -I$(SDK_DIR)/components/ntshell/util \
 -I$(SDK_DIR)/customized/hal/gpio	\
 -I$(SDK_DIR)/customized/hal/systick	\
@@ -94,7 +95,6 @@ C_INCLUDES =  \
 -I$(SDK_DIR)/customized/hk_lib/f1/usart	\
 -I$(SDK_DIR)/customized/hk_lib/f1/gpio	\
 -I$(SDK_DIR)/customized/hk_lib/f1/systick	\
--I$(SDK_DIR)/customized/hal/letter_shell	\
 -I$(SDK_DIR)/components/trace
 
 # ASM sources
