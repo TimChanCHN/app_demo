@@ -1,6 +1,7 @@
 #include "cmd_management.h"
 #include "hk_peripheral.h"
 #include "ntlibc.h"
+#include "ntshell_usrcmd.h"
 
 int led_control(int argc, char **argv)
 {
@@ -13,7 +14,7 @@ int led_control(int argc, char **argv)
     if (ntlibc_strcmp(argv[1], "on") == 0) {
 
         // gpio_output_set(&m_gpio_led, 0);
-        g_led_obj.gpio_ops.gpio_output_set(&g_led_obj.gpio_cfg, 1);
+        g_led_obj.gpio_ops.gpio_output_set(&g_led_obj.gpio_cfg, 0);
         return 0;
     }
 

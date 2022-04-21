@@ -54,10 +54,6 @@ $(SDK_DIR)/platform/hk/HK32F103/STD_LIB/src/misc.c	\
 $(SDK_DIR)/platform/hk/HK32F103/STD_LIB/src/stm32f10x_rcc.c	\
 $(SDK_DIR)/platform/hk/HK32F103/STD_LIB/src/stm32f10x_usart.c	\
 $(SDK_DIR)/components/trace/trace.c	\
-$(SDK_DIR)/components/letter-shell/src/shell_cmd_list.c	\
-$(SDK_DIR)/components/letter-shell/src/shell_companion.c	\
-$(SDK_DIR)/components/letter-shell/src/shell_ext.c	\
-$(SDK_DIR)/components/letter-shell/src/shell.c	\
 $(SDK_DIR)/components/ntshell/core/ntshell.c	\
 $(SDK_DIR)/components/ntshell/core/ntlibc.c	\
 $(SDK_DIR)/components/ntshell/core/text_editor.c	\
@@ -66,11 +62,15 @@ $(SDK_DIR)/components/ntshell/core/vtrecv.c	\
 $(SDK_DIR)/components/ntshell/core/vtsend.c	\
 $(SDK_DIR)/components/ntshell/util/ntopt.c	\
 $(SDK_DIR)/components/ntshell/util/ntstdio.c	\
-$(SDK_DIR)/customized/hal/letter_shell/letter_handler.c \
 $(SDK_DIR)/customized/hal/usart/retarget.c	\
 $(SDK_DIR)/customized/hk_lib/f1/usart/hk_usart.c	\
 $(SDK_DIR)/customized/hk_lib/f1/gpio/hk_gpio.c	\
-$(SDK_DIR)/customized/hk_lib/f1/systick/hk_systick.c
+$(SDK_DIR)/customized/hk_lib/f1/systick/hk_systick.c \
+$(SDK_DIR)/components/letter-shell/src/shell_cmd_list.c	\
+$(SDK_DIR)/components/letter-shell/src/shell_companion.c	\
+$(SDK_DIR)/components/letter-shell/src/shell_ext.c	\
+$(SDK_DIR)/components/letter-shell/src/shell.c	\
+$(SDK_DIR)/customized/hal/letter_shell/letter_handler.c \
 
 # C includes
 C_INCLUDES =  \

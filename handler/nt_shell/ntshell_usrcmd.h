@@ -63,8 +63,8 @@ typedef int (* ntshell_call_func)(int argc, char **argv);
  * @brief コマンドテーブル。
  */
 typedef struct {
-    char *cmd;  /**< コマンド名。 */
-    char *desc; /**< コマンド説明。 */
+    const char *cmd;  /**< コマンド名。 */
+    const char *desc; /**< コマンド説明。 */
     ntshell_call_func func; /**< コールバック関数。 */
 } cmd_table_t;
 
