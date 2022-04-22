@@ -1,10 +1,11 @@
 #include "boards.h"
 #include "version.h"
 
-
+#include "shell.h"
 #include "trace.h"
 #include "hk_peripheral.h"
 #include "nt_handler.h"
+#include "letter_handler.h"
 
 int main(void)
 {
@@ -19,11 +20,15 @@ int main(void)
   letter_shell_init();
   // init_nt_shell();
 
+  Shell *g_shell = get_shell();
+
   g_systick_obj.systick_ops.delay_us(&g_systick_obj.systick_cfg, 1000);
-  // trace_info("loop\r\n");
-  // trace_debug("debug\r\n");
+  trace_info("loop\r\n");
+  trace_debug("debug\r\n");
   while (1)
   {
+    shellTask(g_shell);
+
     #if 0
     g_led_obj.gpio_ops.gpio_output_set(&g_led_obj.gpio_cfg, 1);
     g_systick_obj.systick_ops.delay_ms(&g_systick_obj.systick_cfg, 1000);

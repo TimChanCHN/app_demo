@@ -33,9 +33,9 @@ short userShellRead(char *data, unsigned short len)
     return g_usart_object.usart_ops.usart_read_buffer((uint8_t *)data, len);
 }
 
-Shell get_shell(void)
+Shell *get_shell(void)
 {
-    return shell;
+    return &shell;
 }
 
 void letter_shell_init(void)
@@ -45,7 +45,7 @@ void letter_shell_init(void)
     shell.read = userShellRead;
     shellInit(&shell, shellBuffer, sizeof(shellBuffer));
 
-    shellTask(&shell);
+    // shellTask(&shell);
 
 
 }
