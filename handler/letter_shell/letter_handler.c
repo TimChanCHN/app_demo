@@ -50,4 +50,7 @@ void letter_shell_init(void)
 
 }
 
-
+void letter_shell_loop_task(void)
+{
+    shellTask(&shell);
+}
