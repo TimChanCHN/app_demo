@@ -41,66 +41,108 @@ $(info PLATFORM: $(PLATFORM))
 # source
 ######################################
 # C sources
-C_SOURCES =  			\
-src/main.c 				\
-src/nt_handler.c 				\
-src/hk_peripheral.c 	\
-src/stm32f10x_it.c  		\
-core/system_stm32f10x.c	\
-handler/cmd_management/cmd_management.c	\
-handler/letter_shell/letter_handler.c \
+#标准库函数
+SRC_STD_LIB = 	\
 $(SDK_DIR)/platform/hk/HK32F103/STD_LIB/src/stm32f10x_gpio.c	\
+$(SDK_DIR)/platform/hk/HK32F103/STD_LIB/src/stm32f10x_tim.c	\
 $(SDK_DIR)/platform/hk/HK32F103/STD_LIB/src/misc.c	\
 $(SDK_DIR)/platform/hk/HK32F103/STD_LIB/src/stm32f10x_rcc.c	\
 $(SDK_DIR)/platform/hk/HK32F103/STD_LIB/src/stm32f10x_usart.c	\
-$(SDK_DIR)/components/trace/trace.c	\
-$(SDK_DIR)/components/ntshell/core/ntshell.c	\
-$(SDK_DIR)/components/ntshell/core/ntlibc.c	\
-$(SDK_DIR)/components/ntshell/core/text_editor.c	\
-$(SDK_DIR)/components/ntshell/core/text_history.c	\
-$(SDK_DIR)/components/ntshell/core/vtrecv.c	\
-$(SDK_DIR)/components/ntshell/core/vtsend.c	\
-$(SDK_DIR)/components/ntshell/util/ntopt.c	\
-$(SDK_DIR)/components/ntshell/util/ntstdio.c	\
-$(SDK_DIR)/components/ntshell/usrcmd/ntshell_usrcmd.c	\
-$(SDK_DIR)/customized/hal/usart/retarget.c	\
-$(SDK_DIR)/customized/hk_lib/f1/usart/hk_usart.c	\
-$(SDK_DIR)/customized/hk_lib/f1/gpio/hk_gpio.c	\
-$(SDK_DIR)/customized/hk_lib/f1/systick/hk_systick.c \
-$(SDK_DIR)/components/letter-shell/src/shell_cmd_list.c	\
-$(SDK_DIR)/components/letter-shell/src/shell_companion.c	\
-$(SDK_DIR)/components/letter-shell/src/shell_ext.c	\
-$(SDK_DIR)/components/letter-shell/src/shell.c	\
 
+#APP
+SRC_APP = \
+handler/cmd_management \
+handler/letter_shell \
+handler/nt_shell \
+
+#第三方库
+SRC_COMPONENTS = \
+$(SDK_DIR)/components/trace		\
+$(SDK_DIR)/components/app_scheduler	\
+$(SDK_DIR)/components/app_timer		\
+$(SDK_DIR)/components/letter-shell/src	\
+$(SDK_DIR)/components/ntshell/core		\
+$(SDK_DIR)/components/ntshell/util		\
+$(SDK_DIR)/components/ntshell/usrcmd	\
+
+#对应的底层接口
+SRC_CUSTOMIZED = \
+$(SDK_DIR)/customized/hal/usart		\
+$(SDK_DIR)/customized/hk_lib/f1/usart	\
+$(SDK_DIR)/customized/hk_lib/f1/gpio	\
+$(SDK_DIR)/customized/hk_lib/f1/systick	\
+$(SDK_DIR)/customized/hk_lib/f1/timer	\	
+
+SRCDIRS	:= \
+$(SRC_APP) \
+$(SRC_COMPONENTS) \
+$(SRC_CUSTOMIZED)
+
+CFILES := $(foreach dir, $(SRCDIRS), $(wildcard $(dir)/*.c))
+CFILENDIR	:= $(notdir  $(CFILES))
+
+C_SOURCES =  			\
+src/main.c 				\
+src/hk_peripheral.c 	\
+src/stm32f10x_it.c  	\
+core/system_stm32f10x.c	\
+$(SRC_STD_LIB)	\
+$(CFILENDIR)	\
+
+VPATH			:= $(SRCDIRS)
+
+####################################################################
 # C includes
-C_INCLUDES =  \
--Isrc \
--Ibsp \
--Icore \
--Ihandler \
--Ihandler/cmd_management	\
--Ihandler/letter_shell	\
+# system include
+INC_SYSTEM = \
 -I$(SDK_DIR)/platform/hk/HK32F103/STD_LIB/inc \
 -I$(SDK_DIR)/platform/hk/HK32F103/CMSIS/CM3/DeviceSupport \
 -I$(SDK_DIR)/platform/hk/HK32F103/CMSIS/CM3/CoreSupport	\
+
+# APP include
+INC_APP = \
+-Ihandler/cmd_management	\
+-Ihandler/letter_shell	\
+-Ihandler/nt_shell	\
+
+# 第三方库头文件
+INC_COMPONENTS = \
 -I$(SDK_DIR)/components/util	\
 -I$(SDK_DIR)/components/lib_err	\
 -I$(SDK_DIR)/components/letter-shell/src \
 -I$(SDK_DIR)/components/ntshell/core \
 -I$(SDK_DIR)/components/ntshell/usrcmd	\
 -I$(SDK_DIR)/components/ntshell/util \
+-I$(SDK_DIR)/components/trace	\
+-I$(SDK_DIR)/components/app_timer	\
+-I$(SDK_DIR)/components/queue	\
+-I$(SDK_DIR)/components/app_scheduler	\
+
+INC_CUSTOMIZE = \
 -I$(SDK_DIR)/customized/hal/gpio	\
 -I$(SDK_DIR)/customized/hal/systick	\
 -I$(SDK_DIR)/customized/hal/usart	\
+-I$(SDK_DIR)/customized/hal/timer	\
 -I$(SDK_DIR)/customized/hk_lib/f1/usart	\
 -I$(SDK_DIR)/customized/hk_lib/f1/gpio	\
 -I$(SDK_DIR)/customized/hk_lib/f1/systick	\
--I$(SDK_DIR)/components/trace
+-I$(SDK_DIR)/customized/hk_lib/f1/timer	\
+
+C_INCLUDES =  \
+-Isrc \
+-Ibsp \
+-Icore \
+-Ihandler \
+$(INC_APP)	\
+$(INC_SYSTEM)	\
+$(INC_COMPONENTS)	\
+$(INC_CUSTOMIZE)	\
 
 # ASM sources
 ASM_SOURCES =  \
 linker/startup_stm32f103_gcc.s
 
+##############################################################
 # macros for gcc
 # AS defines
 AS_DEFS = 
@@ -234,6 +276,9 @@ $(BUILD_DIR):
 #######################################
 clean:
 	-rm -fR $(BUILD_DIR)
+
+echo:
+	@echo $(CFILENDIR)
 
 #######################################
 # dependencies
