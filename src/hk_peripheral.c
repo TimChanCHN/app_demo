@@ -8,6 +8,7 @@
 #include "timer.h"
 #include "hk_timer.h"
 #include "hk_systick.h"
+#include "st7789_8080.h"
 
 #include "hk_peripheral.h"
 
@@ -103,6 +104,126 @@ timer_object_t g_timer3_object = {
     }
 };
 
+// lcd_driver
+st7789_8080_info_t g_st7789_info = {
+    .cs_pin = {
+        .gpio_cfg = {
+            .gpio_clk = LCD_CS_PORT_PERIPH_CLK,
+            .p_port = (void *)LCD_CS_PORT,
+            .gpio_pin = LCD_CS_PIN,
+            .gpio_dir = GPIO_DIR_OUTPUR,
+            .flag = GPIO_TYPE_IO,
+        },
+
+        .gpio_ops = {
+            .gpio_init = hk_gpio_obj_init,
+            .gpio_output_set = hk_gpio_obj_out_set,
+        },
+    },
+    .rst_pin = {
+        .gpio_cfg = {
+            .gpio_clk = LCD_RST_PORT_PERIPH_CLK,
+            .p_port = (void *)LCD_RST_PORT,
+            .gpio_pin = LCD_RST_PIN,
+            .gpio_dir = GPIO_DIR_OUTPUR,
+            .flag = GPIO_TYPE_IO,
+        },
+
+        .gpio_ops = {
+            .gpio_init = hk_gpio_obj_init,
+            .gpio_output_set = hk_gpio_obj_out_set,
+        },
+    },
+    .rs_pin = {
+        .gpio_cfg = {
+            .gpio_clk = LCD_RS_PORT_PERIPH_CLK,
+            .p_port = (void *)LCD_RS_PORT,
+            .gpio_pin = LCD_RS_PIN,
+            .gpio_dir = GPIO_DIR_OUTPUR,
+            .flag = GPIO_TYPE_IO,
+        },
+
+        .gpio_ops = {
+            .gpio_init = hk_gpio_obj_init,
+            .gpio_output_set = hk_gpio_obj_out_set,
+        },
+    },
+    .wr_pin = {
+        .gpio_cfg = {
+            .gpio_clk = LCD_WR_PORT_PERIPH_CLK,
+            .p_port = (void *)LCD_WR_PORT,
+            .gpio_pin = LCD_WR_PIN,
+            .gpio_dir = GPIO_DIR_OUTPUR,
+            .flag = GPIO_TYPE_IO,
+        },
+
+        .gpio_ops = {
+            .gpio_init = hk_gpio_obj_init,
+            .gpio_output_set = hk_gpio_obj_out_set,
+        },
+    },
+    .rd_pin = {
+        .gpio_cfg = {
+            .gpio_clk = LCD_RD_PORT_PERIPH_CLK,
+            .p_port = (void *)LCD_RD_PORT,
+            .gpio_pin = LCD_RD_PIN,
+            .gpio_dir = GPIO_DIR_OUTPUR,
+            .flag = GPIO_TYPE_IO,
+        },
+
+        .gpio_ops = {
+            .gpio_init = hk_gpio_obj_init,
+            .gpio_output_set = hk_gpio_obj_out_set,
+        },
+    },
+    .db_pin = {
+        .gpio_cfg = {
+            .gpio_clk = LCD_DB_PORT_PERIPH_CLK,
+            .p_port = (void *)LCD_DB_PORT,
+            .gpio_pin = LCD_DB_PIN,
+            .gpio_dir = GPIO_DIR_OUTPUR,
+            .flag = GPIO_TYPE_IO,
+        },
+
+        .gpio_ops = {
+            .gpio_init = hk_gpio_obj_init,
+            .gpio_output_set = hk_gpio_obj_out_set,
+        },
+    },
+};
+
+tftlcd_driver_t g_lcd_driver = {
+    .p_tft_cfg = (void *)&g_st7789_info,
+    .lcd_info = {
+        .setxcmd = 0x2A,
+        .setycmd = 0x2B,
+        .wramcmd = 0x2C,
+        .width = 320,
+        .height = 240,
+        .id = 0,
+        .dir = 0,
+        .color = RED,
+    },
+};
 
 
+tftlcd_object_t g_tftlcd_obj = {
+    .tftlcd_cfg = {
+        .p_dri = &g_lcd_driver,
 
+        .hardware_init  = st7789_hardware_init,
+        .send_byte      = st7789_send_byte,
+        .write_cmd      = st7789_write_cmd, 
+        .write_data     = st7789_write_data, 
+        .delay_ms       = hk_delay_ms, 
+
+    },
+    .tftlcd_ops = {
+        .init = st7789_init,
+        .set_cursor = st7789_set_cursor,
+        .write_ram_pre = st7789_write_ram_pre,
+        .write_ram = st7789_write_ram,
+        .set_scan_dir = st7789_set_scan_dir,
+        .clear_screen = st7789_clear_screen,
+    },
+};

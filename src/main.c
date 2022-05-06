@@ -26,7 +26,7 @@ void test_timer_handler(void *p_data)
         is_led_off = true;
     }
 
-    trace_debug("ticks = %lu \n\r", (uint32_t)g_timer3_object.timer_cfg.ticks);
+    // trace_debug("ticks = %lu \n\r", (uint32_t)g_timer3_object.timer_cfg.ticks);
 }
 
 int main(void)
@@ -36,8 +36,12 @@ int main(void)
   g_led_obj.gpio_ops.gpio_output_set(&g_led_obj.gpio_cfg, 1);
 
   trace_init();
-  letter_shell_init();
+  // letter_shell_init();
   // init_nt_shell();
+
+  trace_info("loop\r\n");
+  g_tftlcd_obj.tftlcd_ops.init(&g_tftlcd_obj.tftlcd_cfg);
+  g_tftlcd_obj.tftlcd_ops.clear_screen(&g_tftlcd_obj.tftlcd_cfg, &g_tftlcd_obj.tftlcd_ops);
 
   TIMER_INIT(&g_timer3_object);
 
@@ -51,5 +55,14 @@ int main(void)
     letter_shell_loop_task();
 
     TIMER_SCHEDULER_LOOP();
+
+
+    // g_led_obj.gpio_ops.gpio_output_set(&g_led_obj.gpio_cfg, 0);
+    // g_tftlcd_obj.tftlcd_cfg.delay_ms(2000);
+    // g_systick_obj.systick_ops.delay_ms(500);
+    // g_led_obj.gpio_ops.gpio_output_set(&g_led_obj.gpio_cfg, 1);
+    // g_tftlcd_obj.tftlcd_cfg.delay_ms(2000);
+    // g_systick_obj.systick_ops.delay_ms(500);
+
   }
 }

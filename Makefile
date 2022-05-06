@@ -73,10 +73,15 @@ $(SDK_DIR)/customized/hk_lib/f1/gpio	\
 $(SDK_DIR)/customized/hk_lib/f1/systick	\
 $(SDK_DIR)/customized/hk_lib/f1/timer	\	
 
+#driver
+SRC_DRIVERS = \
+$(SDK_DIR)/drivers/tftlcd/st7789		\
+
 SRCDIRS	:= \
 $(SRC_APP) \
 $(SRC_COMPONENTS) \
-$(SRC_CUSTOMIZED)
+$(SRC_CUSTOMIZED) \
+$(SRC_DRIVERS)
 
 CFILES := $(foreach dir, $(SRCDIRS), $(wildcard $(dir)/*.c))
 CFILENDIR	:= $(notdir  $(CFILES))
@@ -123,10 +128,14 @@ INC_CUSTOMIZE = \
 -I$(SDK_DIR)/customized/hal/systick	\
 -I$(SDK_DIR)/customized/hal/usart	\
 -I$(SDK_DIR)/customized/hal/timer	\
+-I$(SDK_DIR)/customized/hal/tftlcd	\
 -I$(SDK_DIR)/customized/hk_lib/f1/usart	\
 -I$(SDK_DIR)/customized/hk_lib/f1/gpio	\
 -I$(SDK_DIR)/customized/hk_lib/f1/systick	\
 -I$(SDK_DIR)/customized/hk_lib/f1/timer	\
+
+INC_DRIVER = \
+-I$(SDK_DIR)/drivers/tftlcd/st7789 \
 
 C_INCLUDES =  \
 -Isrc \
@@ -137,6 +146,7 @@ $(INC_APP)	\
 $(INC_SYSTEM)	\
 $(INC_COMPONENTS)	\
 $(INC_CUSTOMIZE)	\
+$(INC_DRIVER) \
 
 # ASM sources
 ASM_SOURCES =  \
