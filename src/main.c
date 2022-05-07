@@ -40,8 +40,37 @@ int main(void)
   // init_nt_shell();
 
   trace_info("loop\r\n");
-  g_tftlcd_obj.tftlcd_ops.init(&g_tftlcd_obj.tftlcd_cfg);
-  g_tftlcd_obj.tftlcd_ops.clear_screen(&g_tftlcd_obj.tftlcd_cfg, &g_tftlcd_obj.tftlcd_ops);
+  g_tftlcd_obj.tftlcd_ops.init(&g_tftlcd_obj.tftlcd_cfg, &g_tftlcd_obj.tftlcd_ops);
+
+  // 1. test fill area
+  fill_object_t fill_area = {
+    .coord_s = {
+      .x = 50,
+      .y = 10,
+    },
+    .coord_e = {
+      .x = 200,
+      .y = 200,
+    },
+    .color = WHITE,
+  };
+  g_tftlcd_obj.tftlcd_ops.fill_area(&g_tftlcd_obj.tftlcd_cfg, &g_tftlcd_obj.tftlcd_ops, fill_area);
+
+  // 2. test show_char
+  // chars_info_t ch = {
+  //   .num = 'A',
+  //   .size = 16,
+  //   .mode = 1,
+  //   .coord = {
+  //     .x = 100,
+  //     .y = 100,
+  //   },
+  // };
+  // g_tftlcd_obj.tftlcd_ops.show_char(&g_tftlcd_obj.tftlcd_cfg, &g_tftlcd_obj.tftlcd_ops, ch);
+
+
+
+
 
   TIMER_INIT(&g_timer3_object);
 
@@ -55,14 +84,6 @@ int main(void)
     letter_shell_loop_task();
 
     TIMER_SCHEDULER_LOOP();
-
-
-    // g_led_obj.gpio_ops.gpio_output_set(&g_led_obj.gpio_cfg, 0);
-    // g_tftlcd_obj.tftlcd_cfg.delay_ms(2000);
-    // g_systick_obj.systick_ops.delay_ms(500);
-    // g_led_obj.gpio_ops.gpio_output_set(&g_led_obj.gpio_cfg, 1);
-    // g_tftlcd_obj.tftlcd_cfg.delay_ms(2000);
-    // g_systick_obj.systick_ops.delay_ms(500);
 
   }
 }

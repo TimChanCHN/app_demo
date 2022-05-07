@@ -202,7 +202,8 @@ tftlcd_driver_t g_lcd_driver = {
         .height = 240,
         .id = 0,
         .dir = 0,
-        .color = RED,
+        .background_color = RED,
+        .point_color = BLUE,
     },
 };
 
@@ -215,15 +216,24 @@ tftlcd_object_t g_tftlcd_obj = {
         .send_byte      = st7789_send_byte,
         .write_cmd      = st7789_write_cmd, 
         .write_data     = st7789_write_data, 
+        .write_burst_data = st7789_write_burst_data,
         .delay_ms       = hk_delay_ms, 
 
     },
     .tftlcd_ops = {
+        // 私有函数
         .init = st7789_init,
         .set_cursor = st7789_set_cursor,
         .write_ram_pre = st7789_write_ram_pre,
         .write_ram = st7789_write_ram,
         .set_scan_dir = st7789_set_scan_dir,
-        .clear_screen = st7789_clear_screen,
+
+
+        .clear_screen = tftlcd_clear_screen,
+        .fill_area = tftlcd_fill_area,
+        
+        // 公有函数
+        .draw_point = tftlcd_draw_point,
+        .show_char = tftlcd_show_char,
     },
 };

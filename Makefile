@@ -68,6 +68,7 @@ $(SDK_DIR)/components/ntshell/usrcmd	\
 #对应的底层接口
 SRC_CUSTOMIZED = \
 $(SDK_DIR)/customized/hal/usart		\
+$(SDK_DIR)/customized/hal/tftlcd		\
 $(SDK_DIR)/customized/hk_lib/f1/usart	\
 $(SDK_DIR)/customized/hk_lib/f1/gpio	\
 $(SDK_DIR)/customized/hk_lib/f1/systick	\
