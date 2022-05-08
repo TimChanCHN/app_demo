@@ -9,6 +9,10 @@
 #include "app_timer.h"
 #include "hk_peripheral.h"
 
+#include "lv_obj.h"
+#include "lv_port_disp.h"
+#include "lv_demo_widgets.h"
+
 TIMER_DEF(m_test_timer);
 
 void test_timer_handler(void *p_data)
@@ -36,25 +40,30 @@ int main(void)
   g_led_obj.gpio_ops.gpio_output_set(&g_led_obj.gpio_cfg, 1);
 
   trace_init();
-  // letter_shell_init();
+  letter_shell_init();
   // init_nt_shell();
 
+  TIMER_INIT(&g_timer3_object);
+
+  TIMER_CREATE(&m_test_timer, false, false, test_timer_handler);
+  TIMER_START(m_test_timer, 500);
+
   trace_info("loop\r\n");
-  g_tftlcd_obj.tftlcd_ops.init(&g_tftlcd_obj.tftlcd_cfg, &g_tftlcd_obj.tftlcd_ops);
+  // g_tftlcd_obj.tftlcd_ops.init(&g_tftlcd_obj.tftlcd_cfg, &g_tftlcd_obj.tftlcd_ops);
 
   // 1. test fill area
-  fill_object_t fill_area = {
-    .coord_s = {
-      .x = 50,
-      .y = 10,
-    },
-    .coord_e = {
-      .x = 200,
-      .y = 200,
-    },
-    .color = WHITE,
-  };
-  g_tftlcd_obj.tftlcd_ops.fill_area(&g_tftlcd_obj.tftlcd_cfg, &g_tftlcd_obj.tftlcd_ops, fill_area);
+  // fill_object_t fill_area = {
+  //   .coord_s = {
+  //     .x = 50,
+  //     .y = 10,
+  //   },
+  //   .coord_e = {
+  //     .x = 200,
+  //     .y = 200,
+  //   },
+  //   .color = WHITE,
+  // };
+  // g_tftlcd_obj.tftlcd_ops.fill_area(&g_tftlcd_obj.tftlcd_cfg, &g_tftlcd_obj.tftlcd_ops, fill_area);
 
   // 2. test show_char
   // chars_info_t ch = {
@@ -68,22 +77,20 @@ int main(void)
   // };
   // g_tftlcd_obj.tftlcd_ops.show_char(&g_tftlcd_obj.tftlcd_cfg, &g_tftlcd_obj.tftlcd_ops, ch);
 
+  // lvgl设置
+  lv_init();
+  lv_port_disp_init();
+  lv_demo_widgets();
 
 
-
-
-  TIMER_INIT(&g_timer3_object);
-
-  TIMER_CREATE(&m_test_timer, false, false, test_timer_handler);
-  TIMER_START(m_test_timer, 500);
 
   trace_info("loop\r\n");
   trace_debug("debug\r\n");
   while (1)
   {
     letter_shell_loop_task();
-
     TIMER_SCHEDULER_LOOP();
 
+    lv_task_handler();
   }
 }

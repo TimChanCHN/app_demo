@@ -54,6 +54,7 @@ SRC_APP = \
 handler/cmd_management \
 handler/letter_shell \
 handler/nt_shell \
+gui/lvgl_app/lv_demos/src/lv_demo_widgets \
 
 #第三方库
 SRC_COMPONENTS = \
@@ -64,6 +65,16 @@ $(SDK_DIR)/components/letter-shell/src	\
 $(SDK_DIR)/components/ntshell/core		\
 $(SDK_DIR)/components/ntshell/util		\
 $(SDK_DIR)/components/ntshell/usrcmd	\
+$(SDK_DIR)/components/lvgl/src/lv_core	\
+$(SDK_DIR)/components/lvgl/src/lv_draw	\
+$(SDK_DIR)/components/lvgl/src/lv_font	\
+$(SDK_DIR)/components/lvgl/src/lv_gpu	\
+$(SDK_DIR)/components/lvgl/src/lv_hal	\
+$(SDK_DIR)/components/lvgl/src/lv_misc	\
+$(SDK_DIR)/components/lvgl/src/lv_themes	\
+$(SDK_DIR)/components/lvgl/src/lv_widgets	\
+$(SDK_DIR)/components/lvgl/porting	\
+
 
 #对应的底层接口
 SRC_CUSTOMIZED = \
@@ -110,6 +121,10 @@ INC_APP = \
 -Ihandler/cmd_management	\
 -Ihandler/letter_shell	\
 -Ihandler/nt_shell	\
+-Igui/lvgl_app/		\
+-Igui/lvgl_app/lv_demos		\
+-Igui/lvgl_app/lv_demos/src/lv_demo_widgets		\
+
 
 # 第三方库头文件
 INC_COMPONENTS = \
@@ -123,6 +138,17 @@ INC_COMPONENTS = \
 -I$(SDK_DIR)/components/app_timer	\
 -I$(SDK_DIR)/components/queue	\
 -I$(SDK_DIR)/components/app_scheduler	\
+-I$(SDK_DIR)/components/lvgl			\
+-I$(SDK_DIR)/components/lvgl/src		\
+-I$(SDK_DIR)/components/lvgl/src/lv_core	\
+-I$(SDK_DIR)/components/lvgl/src/lv_draw	\
+-I$(SDK_DIR)/components/lvgl/src/lv_font	\
+-I$(SDK_DIR)/components/lvgl/src/lv_gpu	\
+-I$(SDK_DIR)/components/lvgl/src/lv_misc	\
+-I$(SDK_DIR)/components/lvgl/src/lv_hal	\
+-I$(SDK_DIR)/components/lvgl/src/lv_themes	\
+-I$(SDK_DIR)/components/lvgl/src/lv_widgets	\
+-I$(SDK_DIR)/components/lvgl/porting	\
 
 INC_CUSTOMIZE = \
 -I$(SDK_DIR)/customized/hal/gpio	\
