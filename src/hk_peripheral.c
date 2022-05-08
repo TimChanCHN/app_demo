@@ -222,18 +222,18 @@ tftlcd_object_t g_tftlcd_obj = {
     },
     .tftlcd_ops = {
         // 私有函数
-        .init = st7789_init,
-        .set_cursor = st7789_set_cursor,
-        .write_ram_pre = st7789_write_ram_pre,
-        .write_ram = st7789_write_ram,
-        .set_scan_dir = st7789_set_scan_dir,
+        .init           = st7789_init,
+        .set_cursor     = st7789_set_cursor,
+        .write_ram_pre  = st7789_write_ram_pre,
+        .write_ram      = st7789_write_ram,
+        .set_scan_dir   = st7789_set_scan_dir,
 
-
-        .clear_screen = tftlcd_clear_screen,
-        .fill_area = tftlcd_fill_area,
-        
         // 公有函数
-        .draw_point = tftlcd_draw_point,
-        .show_char = tftlcd_show_char,
+        .clear_screen   = tftlcd_clear_screen,
+        .fill_area      = tftlcd_fill_area,
+        .draw_point     = tftlcd_draw_point,
+        .show_char      = tftlcd_show_char,
     },
 };
+
+tftlcd_object_t *g_tftlcd_lvgl_obj = &g_tftlcd_obj;

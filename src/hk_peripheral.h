@@ -12,5 +12,6 @@ extern gpio_object_t g_led_obj;
 extern systick_object_t g_systick_obj;
 extern timer_object_t   g_timer3_object;
 extern tftlcd_object_t g_tftlcd_obj;
+extern tftlcd_object_t *g_tftlcd_lvgl_obj;
 
 #endif
