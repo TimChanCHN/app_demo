@@ -48,6 +48,7 @@ $(SDK_DIR)/platform/hk/HK32F103/STD_LIB/src/stm32f10x_tim.c	\
 $(SDK_DIR)/platform/hk/HK32F103/STD_LIB/src/misc.c	\
 $(SDK_DIR)/platform/hk/HK32F103/STD_LIB/src/stm32f10x_rcc.c	\
 $(SDK_DIR)/platform/hk/HK32F103/STD_LIB/src/stm32f10x_usart.c	\
+$(SDK_DIR)/platform/hk/HK32F103/STD_LIB/src/stm32f10x_fsmc.c	\
 
 #APP
 SRC_APP = \
@@ -83,11 +84,13 @@ $(SDK_DIR)/customized/hal/tftlcd		\
 $(SDK_DIR)/customized/hk_lib/f1/usart	\
 $(SDK_DIR)/customized/hk_lib/f1/gpio	\
 $(SDK_DIR)/customized/hk_lib/f1/systick	\
-$(SDK_DIR)/customized/hk_lib/f1/timer	\	
+$(SDK_DIR)/customized/hk_lib/f1/timer	\
+$(SDK_DIR)/customized/hk_lib/f1/fsmc	\		
 
 #driver
 SRC_DRIVERS = \
 $(SDK_DIR)/drivers/tftlcd/st7789		\
+$(SDK_DIR)/drivers/tftlcd/nt35510		\
 
 SRCDIRS	:= \
 $(SRC_APP) \
@@ -160,9 +163,11 @@ INC_CUSTOMIZE = \
 -I$(SDK_DIR)/customized/hk_lib/f1/gpio	\
 -I$(SDK_DIR)/customized/hk_lib/f1/systick	\
 -I$(SDK_DIR)/customized/hk_lib/f1/timer	\
+-I$(SDK_DIR)/customized/hk_lib/f1/fsmc	\
 
 INC_DRIVER = \
 -I$(SDK_DIR)/drivers/tftlcd/st7789 \
+-I$(SDK_DIR)/drivers/tftlcd/nt35510 \
 
 C_INCLUDES =  \
 -Isrc \

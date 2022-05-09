@@ -35,7 +35,7 @@
 #define USER_TIMER_FREQ                     1000000     //定时器经分频后获得的频率
 #define USER_TIMER_PERIOD                   1000        //定时器溢出计数
 
-/* LCD */
+/* LCD -- ST7789 */
 // PE0
 #define LCD_CS_PIN                          GPIO_Pin_0
 #define LCD_CS_PORT                         GPIOE
@@ -67,7 +67,21 @@
 #define LCD_DB_PORT                         GPIOD
 #define LCD_DB_PORT_PERIPH_CLK              RCC_APB2Periph_GPIOD
 
+/* LCD -- NT35510 */
+#define LCD_RST1_PIN                            GPIO_Pin_1
+#define LCD_RST1_PORT                           GPIOE
+#define LCD_RST1_PORT_PERIPH_CLK                RCC_APB2Periph_GPIOE
 
+#define LCD_BL_PIN                              GPIO_Pin_12
+#define LCD_BL_PORT                             GPIOD
+#define LCD_BL_PORT_PERIPH_CLK                  RCC_APB2Periph_GPIOD
 
+#define LCD_FSMC1_PIN                          (GPIO_Pin_0|GPIO_Pin_1|GPIO_Pin_4|GPIO_Pin_5|GPIO_Pin_7|GPIO_Pin_8|GPIO_Pin_9|GPIO_Pin_10|GPIO_Pin_11|GPIO_Pin_14|GPIO_Pin_15)
+#define LCD_FSMC1_PORT                         GPIOD
+#define LCD_FSMC1_PORT_PERIPH_CLK              RCC_APB2Periph_GPIOD
+
+#define LCD_FSMC2_PIN                          (GPIO_Pin_7|GPIO_Pin_8|GPIO_Pin_9|GPIO_Pin_10|GPIO_Pin_11|GPIO_Pin_12|GPIO_Pin_13|GPIO_Pin_14|GPIO_Pin_15)
+#define LCD_FSMC2_PORT                         GPIOE
+#define LCD_FSMC2_PORT_PERIPH_CLK              RCC_APB2Periph_GPIOE
 
 #endif
