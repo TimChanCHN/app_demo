@@ -91,6 +91,7 @@ $(SDK_DIR)/customized/hk_lib/f1/fsmc	\
 SRC_DRIVERS = \
 $(SDK_DIR)/drivers/tftlcd/st7789		\
 $(SDK_DIR)/drivers/tftlcd/nt35510		\
+$(SDK_DIR)/drivers/tftlcd/ili9341		\
 
 SRCDIRS	:= \
 $(SRC_APP) \
@@ -168,6 +169,7 @@ INC_CUSTOMIZE = \
 INC_DRIVER = \
 -I$(SDK_DIR)/drivers/tftlcd/st7789 \
 -I$(SDK_DIR)/drivers/tftlcd/nt35510 \
+-I$(SDK_DIR)/drivers/tftlcd/ili9341		\
 
 C_INCLUDES =  \
 -Isrc \

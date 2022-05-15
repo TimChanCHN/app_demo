@@ -49,6 +49,9 @@ int main(void)
   TIMER_START(m_test_timer, 500);
 
   trace_info("loop\r\n");
+  
+  // g_tftlcd9341_obj.tftlcd_ops.init(&g_tftlcd9341_obj.tftlcd_cfg, &g_tftlcd9341_obj.tftlcd_ops);
+  g_tftlcd3510_obj.tftlcd_ops.init(&g_tftlcd3510_obj.tftlcd_cfg, &g_tftlcd3510_obj.tftlcd_ops);
   // g_tftlcd_obj.tftlcd_ops.init(&g_tftlcd_obj.tftlcd_cfg, &g_tftlcd_obj.tftlcd_ops);
 
   // 1. test fill area
@@ -67,20 +70,20 @@ int main(void)
 
   // 2. test show_char
   // chars_info_t ch = {
-  //   .num = 'A',
+  //   .num = 'C',
   //   .size = 16,
   //   .mode = 1,
   //   .coord = {
-  //     .x = 100,
-  //     .y = 100,
+  //     .x = 0,
+  //     .y = 0,
   //   },
   // };
-  // g_tftlcd_obj.tftlcd_ops.show_char(&g_tftlcd_obj.tftlcd_cfg, &g_tftlcd_obj.tftlcd_ops, ch);
+  // g_tftlcd9341_obj.tftlcd_ops.show_char(&g_tftlcd9341_obj.tftlcd_cfg, &g_tftlcd9341_obj.tftlcd_ops, ch);
 
   // lvgl设置
-  lv_init();
-  lv_port_disp_init();
-  lv_demo_widgets();
+  // lv_init();
+  // lv_port_disp_init();
+  // lv_demo_widgets();
 
 
 
@@ -91,6 +94,6 @@ int main(void)
     letter_shell_loop_task();
     TIMER_SCHEDULER_LOOP();
 
-    lv_task_handler();
+    // lv_task_handler();
   }
 }
