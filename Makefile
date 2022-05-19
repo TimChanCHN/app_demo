@@ -52,20 +52,17 @@ $(SDK_DIR)/platform/hk/HK32F103/STD_LIB/src/stm32f10x_fsmc.c	\
 
 #APP
 SRC_APP = \
-handler/cmd_management \
 handler/letter_shell \
 handler/nt_shell \
 gui/lvgl_app/lv_demos/src/lv_demo_widgets \
+# handler/cmd_management \
 
-#第三方库
-SRC_COMPONENTS = \
-$(SDK_DIR)/components/trace		\
-$(SDK_DIR)/components/app_scheduler	\
-$(SDK_DIR)/components/app_timer		\
-$(SDK_DIR)/components/letter-shell/src	\
+SRC_NTSHELL = \
 $(SDK_DIR)/components/ntshell/core		\
 $(SDK_DIR)/components/ntshell/util		\
 $(SDK_DIR)/components/ntshell/usrcmd	\
+
+SRC_LVGL = \
 $(SDK_DIR)/components/lvgl/src/lv_core	\
 $(SDK_DIR)/components/lvgl/src/lv_draw	\
 $(SDK_DIR)/components/lvgl/src/lv_font	\
@@ -76,6 +73,14 @@ $(SDK_DIR)/components/lvgl/src/lv_themes	\
 $(SDK_DIR)/components/lvgl/src/lv_widgets	\
 $(SDK_DIR)/components/lvgl/porting	\
 
+#第三方库
+SRC_COMPONENTS = \
+$(SDK_DIR)/components/trace		\
+$(SDK_DIR)/components/app_scheduler	\
+$(SDK_DIR)/components/app_timer		\
+$(SDK_DIR)/components/letter-shell/src	\
+# $(SRC_LVGL)
+
 
 #对应的底层接口
 SRC_CUSTOMIZED = \
@@ -85,13 +90,15 @@ $(SDK_DIR)/customized/hk_lib/f1/usart	\
 $(SDK_DIR)/customized/hk_lib/f1/gpio	\
 $(SDK_DIR)/customized/hk_lib/f1/systick	\
 $(SDK_DIR)/customized/hk_lib/f1/timer	\
-$(SDK_DIR)/customized/hk_lib/f1/fsmc	\		
+$(SDK_DIR)/customized/hk_lib/f1/fsmc	\
+$(SDK_DIR)/customized/hk_lib/f1/i2c		\
 
 #driver
 SRC_DRIVERS = \
 $(SDK_DIR)/drivers/tftlcd/st7789		\
 $(SDK_DIR)/drivers/tftlcd/nt35510		\
 $(SDK_DIR)/drivers/tftlcd/ili9341		\
+$(SDK_DIR)/drivers/touch				\
 
 SRCDIRS	:= \
 $(SRC_APP) \
@@ -120,6 +127,19 @@ INC_SYSTEM = \
 -I$(SDK_DIR)/platform/hk/HK32F103/CMSIS/CM3/DeviceSupport \
 -I$(SDK_DIR)/platform/hk/HK32F103/CMSIS/CM3/CoreSupport	\
 
+INC_LVGL = \
+-I$(SDK_DIR)/components/lvgl			\
+-I$(SDK_DIR)/components/lvgl/src		\
+-I$(SDK_DIR)/components/lvgl/src/lv_core	\
+-I$(SDK_DIR)/components/lvgl/src/lv_draw	\
+-I$(SDK_DIR)/components/lvgl/src/lv_font	\
+-I$(SDK_DIR)/components/lvgl/src/lv_gpu	\
+-I$(SDK_DIR)/components/lvgl/src/lv_misc	\
+-I$(SDK_DIR)/components/lvgl/src/lv_hal	\
+-I$(SDK_DIR)/components/lvgl/src/lv_themes	\
+-I$(SDK_DIR)/components/lvgl/src/lv_widgets	\
+-I$(SDK_DIR)/components/lvgl/porting	\
+
 # APP include
 INC_APP = \
 -Ihandler/cmd_management	\
@@ -142,17 +162,7 @@ INC_COMPONENTS = \
 -I$(SDK_DIR)/components/app_timer	\
 -I$(SDK_DIR)/components/queue	\
 -I$(SDK_DIR)/components/app_scheduler	\
--I$(SDK_DIR)/components/lvgl			\
--I$(SDK_DIR)/components/lvgl/src		\
--I$(SDK_DIR)/components/lvgl/src/lv_core	\
--I$(SDK_DIR)/components/lvgl/src/lv_draw	\
--I$(SDK_DIR)/components/lvgl/src/lv_font	\
--I$(SDK_DIR)/components/lvgl/src/lv_gpu	\
--I$(SDK_DIR)/components/lvgl/src/lv_misc	\
--I$(SDK_DIR)/components/lvgl/src/lv_hal	\
--I$(SDK_DIR)/components/lvgl/src/lv_themes	\
--I$(SDK_DIR)/components/lvgl/src/lv_widgets	\
--I$(SDK_DIR)/components/lvgl/porting	\
+$(INC_LVGL) 
 
 INC_CUSTOMIZE = \
 -I$(SDK_DIR)/customized/hal/gpio	\
@@ -160,16 +170,20 @@ INC_CUSTOMIZE = \
 -I$(SDK_DIR)/customized/hal/usart	\
 -I$(SDK_DIR)/customized/hal/timer	\
 -I$(SDK_DIR)/customized/hal/tftlcd	\
+-I$(SDK_DIR)/customized/hal/i2c	\
+-I$(SDK_DIR)/customized/hal/touch	\
 -I$(SDK_DIR)/customized/hk_lib/f1/usart	\
 -I$(SDK_DIR)/customized/hk_lib/f1/gpio	\
 -I$(SDK_DIR)/customized/hk_lib/f1/systick	\
 -I$(SDK_DIR)/customized/hk_lib/f1/timer	\
 -I$(SDK_DIR)/customized/hk_lib/f1/fsmc	\
+-I$(SDK_DIR)/customized/hk_lib/f1/i2c	\
 
 INC_DRIVER = \
 -I$(SDK_DIR)/drivers/tftlcd/st7789 \
 -I$(SDK_DIR)/drivers/tftlcd/nt35510 \
 -I$(SDK_DIR)/drivers/tftlcd/ili9341		\
+-I$(SDK_DIR)/drivers/touch		\
 
 C_INCLUDES =  \
 -Isrc \

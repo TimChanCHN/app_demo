@@ -84,4 +84,21 @@
 #define LCD_FSMC2_PORT                         GPIOE
 #define LCD_FSMC2_PORT_PERIPH_CLK              RCC_APB2Periph_GPIOE
 
+/* Touch cfg */
+#define TOUCH_SDA_PIN                           GPIO_Pin_3
+#define TOUCH_SDA_PORT                          GPIOE
+#define TOUCH_SDA_PERIPH_CLK                    RCC_APB2Periph_GPIOE
+
+#define TOUCH_SCL_PIN                           GPIO_Pin_2
+#define TOUCH_SCL_PORT                          GPIOE
+#define TOUCH_SCL_PERIPH_CLK                    RCC_APB2Periph_GPIOE
+
+#define TOUCH_RST_PIN                           GPIO_Pin_0
+#define TOUCH_RST_PORT                          GPIOE
+#define TOUCH_RST_PERIPH_CLK                    RCC_APB2Periph_GPIOE
+
+#define TOUCH_INT_PIN                           GPIO_Pin_4
+#define TOUCH_INT_PORT                          GPIOE
+#define TOUCH_INT_PERIPH_CLK                    RCC_APB2Periph_GPIOE
+
 #endif

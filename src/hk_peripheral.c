@@ -2,13 +2,18 @@
 
 
 #include "usart.h"
-#include "hk_usart.h"
+#include "fsmc.h"
 #include "gpio.h"
 #include "hk_gpio.h"
 #include "timer.h"
+#include "i2c.h"
+
+#include "hk_usart.h"
+#include "hk_i2c.h"
 #include "hk_timer.h"
 #include "hk_systick.h"
-#include "fsmc.h"
+
+#include "gt9147.h"
 #include "st7789_8080.h"
 #include "nt35510_fsmc.h"
 
@@ -344,3 +349,140 @@ tftlcd_object_t g_tftlcd3510_obj = {
 
 
 tftlcd_object_t *g_tftlcd_lvgl_obj = &g_tftlcd3510_obj;
+
+/* touch 配置 */
+tp_dev_t g_tp_dev = {
+
+};
+
+i2c_object_t g_i2c_obj = {
+    .i2c_cfg = {
+        .sda = {
+            .gpio_cfg = {
+                .gpio_clk = TOUCH_SDA_PERIPH_CLK,
+                .p_port = (void *)TOUCH_SDA_PORT,
+                .gpio_pin = TOUCH_SDA_PIN,
+                .flag = GPIO_TYPE_IO,
+            },
+
+            .gpio_ops = {
+                .gpio_init = hk_gpio_obj_init,
+                .gpio_output_set = hk_gpio_obj_out_set,
+                .gpio_fix_input = hk_gpio_fix_input,
+                .gpio_fix_output = hk_gpio_fix_output,
+            },
+        },
+        .scl = {
+            .gpio_cfg = {
+                .gpio_clk = TOUCH_SCL_PERIPH_CLK,
+                .p_port = (void *)TOUCH_SCL_PORT,
+                .gpio_pin = TOUCH_SCL_PIN,
+                .flag = GPIO_TYPE_IO,
+            },
+
+            .gpio_ops = {
+                .gpio_init = hk_gpio_obj_init,
+                .gpio_output_set = hk_gpio_obj_out_set,
+                .gpio_fix_input = hk_gpio_fix_input,
+                .gpio_fix_output = hk_gpio_fix_output,
+            },
+        },
+        .delay_us = hk_delay_us,
+    },
+    .i2c_ops = {
+        .delay_ms = hk_delay_ms,
+        .init = hk_virt_i2c_init,
+        .xfer_start = hk_virt_i2c_start,
+        .xfer_stop = hk_virt_i2c_stop,
+        .wait_ack = hk_virt_i2c_wait_ack,
+        .set_ack = hk_virt_i2c_set_ack,
+        .set_nack = hk_virt_i2c_set_nack,
+        .send_byte = hk_virt_i2c_send_byte,
+        .read_byte = hk_virt_i2c_read_byte,
+    },
+};
+
+touch_object_t g_touch_obj = {
+    .touch_cfg = {
+        .p_i2c_obj = {
+            .i2c_cfg = {
+                .sda = {
+                    .gpio_cfg = {
+                        .gpio_clk = TOUCH_SDA_PERIPH_CLK,
+                        .p_port = (void *)TOUCH_SDA_PORT,
+                        .gpio_pin = TOUCH_SDA_PIN,
+                        .flag = GPIO_TYPE_IO,
+                    },
+
+                    .gpio_ops = {
+                        .gpio_init = hk_gpio_obj_init,
+                        .gpio_output_set = hk_gpio_obj_out_set,
+                        .gpio_fix_input = hk_gpio_fix_input,
+                        .gpio_fix_output = hk_gpio_fix_output,
+                    },
+                },
+                .scl = {
+                    .gpio_cfg = {
+                        .gpio_clk = TOUCH_SCL_PERIPH_CLK,
+                        .p_port = (void *)TOUCH_SCL_PORT,
+                        .gpio_pin = TOUCH_SCL_PIN,
+                        .flag = GPIO_TYPE_IO,
+                    },
+
+                    .gpio_ops = {
+                        .gpio_init = hk_gpio_obj_init,
+                        .gpio_output_set = hk_gpio_obj_out_set,
+                        .gpio_fix_input = hk_gpio_fix_input,
+                        .gpio_fix_output = hk_gpio_fix_output,
+                    },
+                },
+                .delay_us = hk_delay_us,
+            },
+            .i2c_ops = {
+                .delay_ms = hk_delay_ms,
+                .init = hk_virt_i2c_init,
+                .xfer_start = hk_virt_i2c_start,
+                .xfer_stop = hk_virt_i2c_stop,
+                .wait_ack = hk_virt_i2c_wait_ack,
+                .set_ack = hk_virt_i2c_set_ack,
+                .set_nack = hk_virt_i2c_set_nack,
+                .send_byte = hk_virt_i2c_send_byte,
+                .read_byte = hk_virt_i2c_read_byte,
+            },
+        },
+        .p_rst_obj = {
+            .gpio_cfg = {
+                .gpio_clk = TOUCH_RST_PERIPH_CLK,
+                .p_port = (void *)TOUCH_RST_PORT,
+                .gpio_pin = TOUCH_RST_PIN,
+                .flag = GPIO_TYPE_IO,
+            },
+
+            .gpio_ops = {
+                .gpio_init = hk_gpio_obj_init,
+            },
+        },
+        .p_int_obj = {
+            .gpio_cfg = {
+                .gpio_clk = TOUCH_INT_PERIPH_CLK,
+                .p_port = (void *)TOUCH_INT_PORT,
+                .gpio_pin = TOUCH_INT_PIN,
+                .flag = GPIO_TYPE_IO,
+            },
+
+            .gpio_ops = {
+                .gpio_init = hk_gpio_obj_init,
+            },
+        },
+        .p_touch_cfg = (void *)&g_tp_dev,
+    },
+    .touch_ops = {
+        .send_cfg = gt9147_send_cfg,
+        .write_reg = gt9147_write_reg,
+        .read_reg = gt9147_read_reg,
+        .init = gt9147_init,
+        .scan = gt9147_scan,  
+    },
+};
+
+
