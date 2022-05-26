@@ -52,6 +52,9 @@ int main(void)
   
   // g_tftlcd9341_obj.tftlcd_ops.init(&g_tftlcd9341_obj.tftlcd_cfg, &g_tftlcd9341_obj.tftlcd_ops);
   g_tftlcd3510_obj.tftlcd_ops.init(&g_tftlcd3510_obj.tftlcd_cfg, &g_tftlcd3510_obj.tftlcd_ops);
+  g_touch_obj.touch_ops.init(&g_touch_obj.touch_cfg);
+  trace_info("touch init ok\r\n");
+
   // g_tftlcd_obj.tftlcd_ops.init(&g_tftlcd_obj.tftlcd_cfg, &g_tftlcd_obj.tftlcd_ops);
 
   // 1. test fill area

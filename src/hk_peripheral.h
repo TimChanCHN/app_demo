@@ -6,6 +6,7 @@
 #include "systick.h"
 #include "timer.h"
 #include "tftlcd.h"
+#include "touch.h"
 
 extern usart_object_t g_usart_object;
 extern gpio_object_t g_led_obj;
@@ -15,5 +16,10 @@ extern tftlcd_object_t g_tftlcd_obj;
 extern tftlcd_object_t g_tftlcd3510_obj;
 // extern tftlcd_object_t g_tftlcd9341_obj;
 extern tftlcd_object_t *g_tftlcd_lvgl_obj;
+
+extern touch_object_t g_touch_obj;
+
+extern i2c_object_t g_i2c_obj;
+
 
 #endif

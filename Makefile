@@ -99,6 +99,7 @@ $(SDK_DIR)/drivers/tftlcd/st7789		\
 $(SDK_DIR)/drivers/tftlcd/nt35510		\
 $(SDK_DIR)/drivers/tftlcd/ili9341		\
 $(SDK_DIR)/drivers/touch				\
+$(SDK_DIR)/drivers/eeprom				\
 
 SRCDIRS	:= \
 $(SRC_APP) \
@@ -184,6 +185,7 @@ INC_DRIVER = \
 -I$(SDK_DIR)/drivers/tftlcd/nt35510 \
 -I$(SDK_DIR)/drivers/tftlcd/ili9341		\
 -I$(SDK_DIR)/drivers/touch		\
+-I$(SDK_DIR)/drivers/eeprom		\
 
 C_INCLUDES =  \
 -Isrc \
