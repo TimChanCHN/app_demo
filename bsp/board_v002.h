@@ -101,4 +101,17 @@
 #define TOUCH_INT_PORT                          GPIOE
 #define TOUCH_INT_PERIPH_CLK                    RCC_APB2Periph_GPIOE
 
+/* SDIO cfg  */
+#define SDIO_CMD_PIN                            GPIO_Pin_2
+#define SDIO_CMD_PORT                           GPIOD
+#define SDIO_CMD_PERIPH_CLK                     RCC_APB2Periph_GPIOD
+
+#define SDIO_CLK_PIN                            GPIO_Pin_12
+#define SDIO_CLK_PORT                           GPIOC
+#define SDIO_CLK_PERIPH_CLK                     RCC_APB2Periph_GPIOC
+
+#define SDIO_DAT_PIN                            (GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11)
+#define SDIO_DAT_PORT                           GPIOC
+#define SDIO_DAT_PERIPH_CLK                     RCC_APB2Periph_GPIOC
+
 #endif

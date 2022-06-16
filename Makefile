@@ -49,12 +49,14 @@ $(SDK_DIR)/platform/hk/HK32F103/STD_LIB/src/misc.c	\
 $(SDK_DIR)/platform/hk/HK32F103/STD_LIB/src/stm32f10x_rcc.c	\
 $(SDK_DIR)/platform/hk/HK32F103/STD_LIB/src/stm32f10x_usart.c	\
 $(SDK_DIR)/platform/hk/HK32F103/STD_LIB/src/stm32f10x_fsmc.c	\
+$(SDK_DIR)/platform/hk/HK32F103/STD_LIB/src/stm32f10x_sdio.c	\
 
 #APP
 SRC_APP = \
 handler/letter_shell \
 handler/nt_shell \
-gui/lvgl_app/lv_demos/src/lv_demo_widgets \
+gui/lvgl_app/lv_demos/src/lv_ex_get_started \
+# gui/lvgl_app/lv_demos/src/lv_demo_widgets \
 # handler/cmd_management \
 
 SRC_NTSHELL = \
@@ -79,19 +81,21 @@ $(SDK_DIR)/components/trace		\
 $(SDK_DIR)/components/app_scheduler	\
 $(SDK_DIR)/components/app_timer		\
 $(SDK_DIR)/components/letter-shell/src	\
-# $(SRC_LVGL)
+#$(SRC_LVGL)
 
 
 #对应的底层接口
 SRC_CUSTOMIZED = \
 $(SDK_DIR)/customized/hal/usart		\
 $(SDK_DIR)/customized/hal/tftlcd		\
+$(SDK_DIR)/customized/hk_lib/f1/sys		\
 $(SDK_DIR)/customized/hk_lib/f1/usart	\
 $(SDK_DIR)/customized/hk_lib/f1/gpio	\
 $(SDK_DIR)/customized/hk_lib/f1/systick	\
 $(SDK_DIR)/customized/hk_lib/f1/timer	\
 $(SDK_DIR)/customized/hk_lib/f1/fsmc	\
 $(SDK_DIR)/customized/hk_lib/f1/i2c		\
+$(SDK_DIR)/customized/hk_lib/f1/sdio	\
 
 #driver
 SRC_DRIVERS = \
@@ -148,7 +152,7 @@ INC_APP = \
 -Ihandler/nt_shell	\
 -Igui/lvgl_app/		\
 -Igui/lvgl_app/lv_demos		\
--Igui/lvgl_app/lv_demos/src/lv_demo_widgets		\
+-Igui/lvgl_app/lv_demos/src/lv_ex_get_started		\
 
 
 # 第三方库头文件
@@ -173,12 +177,15 @@ INC_CUSTOMIZE = \
 -I$(SDK_DIR)/customized/hal/tftlcd	\
 -I$(SDK_DIR)/customized/hal/i2c	\
 -I$(SDK_DIR)/customized/hal/touch	\
+-I$(SDK_DIR)/customized/hal/sdio	\
+-I$(SDK_DIR)/customized/hk_lib/f1/sys	\
 -I$(SDK_DIR)/customized/hk_lib/f1/usart	\
 -I$(SDK_DIR)/customized/hk_lib/f1/gpio	\
 -I$(SDK_DIR)/customized/hk_lib/f1/systick	\
 -I$(SDK_DIR)/customized/hk_lib/f1/timer	\
 -I$(SDK_DIR)/customized/hk_lib/f1/fsmc	\
 -I$(SDK_DIR)/customized/hk_lib/f1/i2c	\
+-I$(SDK_DIR)/customized/hk_lib/f1/sdio	\
 
 INC_DRIVER = \
 -I$(SDK_DIR)/drivers/tftlcd/st7789 \

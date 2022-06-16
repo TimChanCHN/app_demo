@@ -440,7 +440,7 @@ touch_object_t g_touch_obj = {
                 .gpio_fix_output = hk_gpio_fix_output,
             },
         },
-        .p_touch_cfg = (void *)&g_tp_dev,
+        .p_touch_dev = (void *)&g_tp_dev,
     },
     .touch_ops = {
         .send_cfg = gt9147_send_cfg,

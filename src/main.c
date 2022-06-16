@@ -11,13 +11,20 @@
 
 #include "lv_obj.h"
 #include "lv_port_disp.h"
-#include "lv_demo_widgets.h"
+#include "lv_port_indev.h"
+// #include "lv_demo_widgets.h"
+
+#include "lv_ex_get_started.h"
+
+#include "gt9147.h"
 
 TIMER_DEF(m_test_timer);
 
 void test_timer_handler(void *p_data)
 {
     static bool is_led_off = false;
+    uint8_t t = 0;
+    uint16_t lastpos[5][2];		//记录最后一次的数据 
 
     if(is_led_off)
     {
@@ -35,68 +42,46 @@ void test_timer_handler(void *p_data)
 
 int main(void)
 {
-  g_systick_obj.systick_ops.systick_init(&g_systick_obj.systick_cfg);
-  g_led_obj.gpio_ops.gpio_init(&g_led_obj.gpio_cfg);
-  g_led_obj.gpio_ops.gpio_output_set(&g_led_obj.gpio_cfg, 1);
+	g_systick_obj.systick_ops.systick_init(&g_systick_obj.systick_cfg);
+	g_led_obj.gpio_ops.gpio_init(&g_led_obj.gpio_cfg);
+	g_led_obj.gpio_ops.gpio_output_set(&g_led_obj.gpio_cfg, 1);
 
-  trace_init();
-  letter_shell_init();
-  // init_nt_shell();
+	trace_init();
+	letter_shell_init();
+	// init_nt_shell();
 
-  TIMER_INIT(&g_timer3_object);
+	TIMER_INIT(&g_timer3_object);
 
-  TIMER_CREATE(&m_test_timer, false, false, test_timer_handler);
-  TIMER_START(m_test_timer, 500);
+	TIMER_CREATE(&m_test_timer, false, false, test_timer_handler);
+	TIMER_START(m_test_timer, 500);
+	
+	// g_tftlcd9341_obj.tftlcd_ops.init(&g_tftlcd9341_obj.tftlcd_cfg, &g_tftlcd9341_obj.tftlcd_ops);
+	// g_tftlcd3510_obj.tftlcd_ops.init(&g_tftlcd3510_obj.tftlcd_cfg, &g_tftlcd3510_obj.tftlcd_ops);
+	// g_touch_obj.touch_ops.init(&g_touch_obj.touch_cfg);
+	// trace_info("touch init ok\r\n");
 
-  trace_info("loop\r\n");
-  
-  // g_tftlcd9341_obj.tftlcd_ops.init(&g_tftlcd9341_obj.tftlcd_cfg, &g_tftlcd9341_obj.tftlcd_ops);
-  g_tftlcd3510_obj.tftlcd_ops.init(&g_tftlcd3510_obj.tftlcd_cfg, &g_tftlcd3510_obj.tftlcd_ops);
-  g_touch_obj.touch_ops.init(&g_touch_obj.touch_cfg);
-  trace_info("touch init ok\r\n");
+	// lvgl设置
+	// lv_init();
+	// lv_port_disp_init();
+	// lv_port_indev_init();
+	// lv_ex_get_started_3();
 
-  // g_tftlcd_obj.tftlcd_ops.init(&g_tftlcd_obj.tftlcd_cfg, &g_tftlcd_obj.tftlcd_ops);
+	trace_info("loop\r\n");
+	trace_debug("debug\r\n");
 
-  // 1. test fill area
-  // fill_object_t fill_area = {
-  //   .coord_s = {
-  //     .x = 50,
-  //     .y = 10,
-  //   },
-  //   .coord_e = {
-  //     .x = 200,
-  //     .y = 200,
-  //   },
-  //   .color = WHITE,
-  // };
-  // g_tftlcd_obj.tftlcd_ops.fill_area(&g_tftlcd_obj.tftlcd_cfg, &g_tftlcd_obj.tftlcd_ops, fill_area);
+	while (g_sdio_obj.sdio_ops.sd_init(&g_sdio_obj.sdio_cfg))
+	{
+		g_systick_obj.systick_ops.delay_ms(1000);
+		trace_info("sd init fail...\r\n");
+	}
+	trace_info("sd init ok...\r\n");
+	g_sdio_obj.sdio_ops.show_card_info(&g_sdio_obj.sdio_cfg);
 
-  // 2. test show_char
-  // chars_info_t ch = {
-  //   .num = 'C',
-  //   .size = 16,
-  //   .mode = 1,
-  //   .coord = {
-  //     .x = 0,
-  //     .y = 0,
-  //   },
-  // };
-  // g_tftlcd9341_obj.tftlcd_ops.show_char(&g_tftlcd9341_obj.tftlcd_cfg, &g_tftlcd9341_obj.tftlcd_ops, ch);
+	while (1)
+	{
+		letter_shell_loop_task();
+		TIMER_SCHEDULER_LOOP();
 
-  // lvgl设置
-  // lv_init();
-  // lv_port_disp_init();
-  // lv_demo_widgets();
-
-
-
-  trace_info("loop\r\n");
-  trace_debug("debug\r\n");
-  while (1)
-  {
-    letter_shell_loop_task();
-    TIMER_SCHEDULER_LOOP();
-
-    // lv_task_handler();
-  }
+		// lv_task_handler();
+	}
 }

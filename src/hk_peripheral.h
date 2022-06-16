@@ -7,6 +7,7 @@
 #include "timer.h"
 #include "tftlcd.h"
 #include "touch.h"
+#include "sdio.h"
 
 extern usart_object_t g_usart_object;
 extern gpio_object_t g_led_obj;
@@ -18,8 +19,11 @@ extern tftlcd_object_t g_tftlcd3510_obj;
 extern tftlcd_object_t *g_tftlcd_lvgl_obj;
 
 extern touch_object_t g_touch_obj;
+extern touch_object_t *g_touch_lvgl_obj;
 
 extern i2c_object_t g_i2c_obj;
+
+extern sdio_obj_t g_sdio_obj;
 
 
 #endif

@@ -12,6 +12,7 @@
 #include "hk_i2c.h"
 #include "hk_timer.h"
 #include "hk_systick.h"
+#include "hk_sdio.h"
 
 #include "gt9147.h"
 #include "st7789_8080.h"
@@ -313,7 +314,7 @@ tftlcd_driver_t g_lcd35510_driver = {
         .width = 480,
         .height = 800,
         .id = 0,
-        .dir = 1,
+        .dir = 0,
         .background_color = RED,
         .point_color = BLUE,
     },
@@ -354,7 +355,12 @@ tftlcd_object_t *g_tftlcd_lvgl_obj = &g_tftlcd3510_obj;
 
 /* touch 配置 */
 tp_dev_t g_tp_dev = {
-
+    // .x = 0, 
+    // .y = 0,
+    .lcd_width = 480,
+    .lcd_height = 800,
+    .sta = 0,				
+    .touchtype = 0,
 };
 
 
@@ -370,6 +376,7 @@ touch_object_t g_touch_obj = {
                         .gpio_pin = TOUCH_SDA_PIN,
                         .flag = GPIO_TYPE_IO,
                         .gpio_dir = GPIO_DIR_OUTPUR,
+                        .mode = GPIO_Mode_IPU,
                     },
 
                     .gpio_ops = {
@@ -431,6 +438,7 @@ touch_object_t g_touch_obj = {
                 .gpio_pin = TOUCH_INT_PIN,
                 .flag = GPIO_TYPE_IO,
                 .gpio_dir = GPIO_DIR_INPUT,
+                .mode = GPIO_Mode_IPU,
             },
 
             .gpio_ops = {
@@ -440,7 +448,7 @@ touch_object_t g_touch_obj = {
                 .gpio_fix_output = hk_gpio_fix_output,
             },
         },
-        .p_touch_cfg = (void *)&g_tp_dev,
+        .p_touch_dev = &g_tp_dev,
     },
     .touch_ops = {
         .send_cfg = gt9147_send_cfg,
@@ -450,7 +458,7 @@ touch_object_t g_touch_obj = {
         .scan = gt9147_scan,  
     },
 };
-
+touch_object_t *g_touch_lvgl_obj = &g_touch_obj;
 // sda --> PB7, scl --> PB6
 
 i2c_object_t g_i2c_obj = {
@@ -500,5 +508,50 @@ i2c_object_t g_i2c_obj = {
         .set_nack = hk_virt_i2c_set_nack,
         .send_byte = hk_virt_i2c_send_byte,
         .read_byte = hk_virt_i2c_read_byte,
+    },
+};
+
+hk_sdio_hw_cfg_t g_sdio_hw_cfg = {
+    .sd_gpio1   = {
+        .gpio_cfg = {
+            .gpio_clk = SDIO_CLK_PERIPH_CLK,
+            .p_port = (void *)SDIO_CLK_PORT,
+            .gpio_pin = (SDIO_CLK_PIN | SDIO_DAT_PIN),
+            .flag = GPIO_TYPE_AF,
+        },
+        .gpio_ops = {
+            .gpio_init = hk_gpio_obj_init,
+        },
+    },
+    .sd_gpio2   = {
+        .gpio_cfg = {
+            .gpio_clk = SDIO_CMD_PERIPH_CLK,
+            .p_port = (void *)SDIO_CMD_PORT,
+            .gpio_pin = SDIO_CMD_PIN,
+            .flag = GPIO_TYPE_AF,
+        },
+        .gpio_ops = {
+            .gpio_init = hk_gpio_obj_init,
+        },
+    },
+};
+
+sd_card_info_t g_card_info = {	
+    .rca        = 0,
+    .cardtype   = SDIO_STD_CAPACITY_SD_CARD_V1_1,	
+};
+
+sdio_obj_t g_sdio_obj = {
+    .sdio_cfg = {
+        .cardinfo       = &g_card_info,
+        .devicemode     = SD_DMA_MODE,
+        .stopcondition  = 0,
+        .transfererror  = SD_OK,
+        .transferend    = 0,
+        .p_hw_cfg       = (void *)&g_sdio_hw_cfg,
+    },
+    .sdio_ops = {
+        .sd_init = hk_sd_init,
+        .show_card_info = hk_sdio_show_cardinfo,
     },
 };
