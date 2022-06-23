@@ -17,6 +17,7 @@
 #include "lv_ex_get_started.h"
 
 #include "gt9147.h"
+#include <stdlib.h>
 
 TIMER_DEF(m_test_timer);
 
@@ -76,6 +77,19 @@ int main(void)
 	}
 	trace_info("sd init ok...\r\n");
 	g_sdio_obj.sdio_ops.show_card_info(&g_sdio_obj.sdio_cfg);
+
+	uint8_t *buf;
+	uint16_t cnt = 0;
+	buf = (uint8_t *)malloc(512);
+	trace_info("buf addr = 0x%x\r\n", buf);
+
+	g_sdio_obj.sdio_ops.sd_read_disk(&g_sdio_obj.sdio_cfg, buf, 1, 512);
+
+	trace_info("sector 0 data: \r\n");
+	for (cnt = 0; cnt < 512; cnt++)
+	{
+		trace_info("%x ", buf[cnt]);
+	}
 
 	while (1)
 	{

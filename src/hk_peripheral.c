@@ -551,7 +551,8 @@ sdio_obj_t g_sdio_obj = {
         .p_hw_cfg       = (void *)&g_sdio_hw_cfg,
     },
     .sdio_ops = {
-        .sd_init = hk_sd_init,
+        .sd_init        = hk_sd_init,
         .show_card_info = hk_sdio_show_cardinfo,
+        .sd_read_disk   = hk_sd_read_disk,
     },
 };

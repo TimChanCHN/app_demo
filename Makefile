@@ -50,6 +50,7 @@ $(SDK_DIR)/platform/hk/HK32F103/STD_LIB/src/stm32f10x_rcc.c	\
 $(SDK_DIR)/platform/hk/HK32F103/STD_LIB/src/stm32f10x_usart.c	\
 $(SDK_DIR)/platform/hk/HK32F103/STD_LIB/src/stm32f10x_fsmc.c	\
 $(SDK_DIR)/platform/hk/HK32F103/STD_LIB/src/stm32f10x_sdio.c	\
+$(SDK_DIR)/platform/hk/HK32F103/STD_LIB/src/stm32f10x_dma.c	\
 
 #APP
 SRC_APP = \
