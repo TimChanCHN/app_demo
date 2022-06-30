@@ -83,12 +83,12 @@ int main(void)
 	buf = (uint8_t *)malloc(512);
 	trace_info("buf addr = 0x%x\r\n", buf);
 
-	g_sdio_obj.sdio_ops.sd_read_disk(&g_sdio_obj.sdio_cfg, buf, 1, 512);
+	g_sdio_obj.sdio_ops.sd_read_disk(&g_sdio_obj.sdio_cfg, buf, 0, 1);
 
 	trace_info("sector 0 data: \r\n");
 	for (cnt = 0; cnt < 512; cnt++)
 	{
-		trace_info("%x ", buf[cnt]);
+		printf("%x ", buf[cnt]);
 	}
 
 	while (1)
