@@ -106,11 +106,18 @@ $(SDK_DIR)/drivers/tftlcd/ili9341		\
 $(SDK_DIR)/drivers/touch				\
 $(SDK_DIR)/drivers/eeprom				\
 
+SRC_EXTERNAL = \
+$(SDK_DIR)/external/fatfs/exfuns	\
+$(SDK_DIR)/external/fatfs/src		\
+# $(SDK_DIR)/external/fatfs			\
+
+
 SRCDIRS	:= \
 $(SRC_APP) \
 $(SRC_COMPONENTS) \
 $(SRC_CUSTOMIZED) \
-$(SRC_DRIVERS)
+$(SRC_DRIVERS)	  \
+$(SRC_EXTERNAL)
 
 CFILES := $(foreach dir, $(SRCDIRS), $(wildcard $(dir)/*.c))
 CFILENDIR	:= $(notdir  $(CFILES))
@@ -195,6 +202,11 @@ INC_DRIVER = \
 -I$(SDK_DIR)/drivers/touch		\
 -I$(SDK_DIR)/drivers/eeprom		\
 
+INC_EXTERNAL = \
+-I$(SDK_DIR)/external/fatfs/exfuns	\
+-I$(SDK_DIR)/external/fatfs/src		\
+# $(SDK_DIR)/external/fatfs			\
+
 C_INCLUDES =  \
 -Isrc \
 -Ibsp \
@@ -204,7 +216,8 @@ $(INC_APP)	\
 $(INC_SYSTEM)	\
 $(INC_COMPONENTS)	\
 $(INC_CUSTOMIZE)	\
-$(INC_DRIVER) \
+$(INC_DRIVER) 		\
+$(INC_EXTERNAL)		
 
 # ASM sources
 ASM_SOURCES =  \
