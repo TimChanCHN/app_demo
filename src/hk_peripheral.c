@@ -18,6 +18,10 @@
 #include "st7789_8080.h"
 #include "nt35510_fsmc.h"
 
+// fatfs文件系统
+#include "fatfsobj.h"
+#include "exfuns.h"
+
 #include "hk_peripheral.h"
 
 // systick设置
@@ -554,5 +558,38 @@ sdio_obj_t g_sdio_obj = {
         .sd_init        = hk_sd_init,
         .show_card_info = hk_sdio_show_cardinfo,
         .sd_read_disk   = hk_sd_read_disk,
+    },
+};
+
+fatfs_object_t g_fatfs_obj = {
+    .fatfs_cfg = {
+        .f_init     =   exfuns_init,
+        .f_tell     =   f_typetell,
+        .f_getfree  =   exf_getfree,
+        .f_deinit   =   exfuns_deinit,
+    },
+    .fatfs_ops = {
+        .f_mount    =   mf_mount,
+        .f_open     =   mf_open,
+        .f_close    =   mf_close,
+        .f_read     =   mf_read,
+        .f_write    =   mf_write,
+        .f_opendir  =   mf_opendir,
+        .f_closedir =   mf_closedir,
+        .f_readdir  =   mf_readdir,
+        .f_scan_files   =   mf_scan_files,
+        .f_showfree =   mf_showfree,
+        .f_lseek    =   mf_lseek,
+        .f_tell     =   mf_tell,
+        .f_size     =   mf_size,
+        .f_mkdir    =   mf_mkdir,
+        .f_fmkfs    =   mf_fmkfs,
+        .f_unlink   =   mf_unlink,
+        .f_rename   =   mf_rename,
+        .f_getlabel =   mf_getlabel,
+        .f_setlabel =   mf_setlabel,
+        .f_gets     =   mf_gets,
+        .f_putc     =   mf_putc,
+        .f_puts     =   mf_puts,
     },
 };

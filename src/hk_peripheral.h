@@ -9,6 +9,8 @@
 #include "touch.h"
 #include "sdio.h"
 
+#include "fatfsobj.h"
+
 extern usart_object_t g_usart_object;
 extern gpio_object_t g_led_obj;
 extern systick_object_t g_systick_obj;
@@ -24,6 +26,6 @@ extern touch_object_t *g_touch_lvgl_obj;
 extern i2c_object_t g_i2c_obj;
 
 extern sdio_obj_t g_sdio_obj;
-
+extern fatfs_object_t g_fatfs_obj;
 
 #endif

@@ -109,7 +109,7 @@ $(SDK_DIR)/drivers/eeprom				\
 SRC_EXTERNAL = \
 $(SDK_DIR)/external/fatfs/exfuns	\
 $(SDK_DIR)/external/fatfs/src		\
-# $(SDK_DIR)/external/fatfs			\
+$(SDK_DIR)/external/fatfs/src/option\
 
 
 SRCDIRS	:= \

@@ -19,6 +19,9 @@
 #include "gt9147.h"
 #include <stdlib.h>
 
+#include "ff.h"  
+#include "exfuns.h"
+
 TIMER_DEF(m_test_timer);
 
 void test_timer_handler(void *p_data)
@@ -90,6 +93,45 @@ int main(void)
 	{
 		printf("%x ", buf[cnt]);
 	}
+	printf("\r\n");
+
+	#if 0
+	uint8_t res = 88;
+	uint32_t total,free;
+ 	exfuns_init();							//为fatfs相关变量申请内存				 
+  	res = f_mount(fs[0],"0:",1); 					//挂载SD卡 
+
+	if (res == 0)
+	{
+		trace_info("mount sd successful\r\n");
+	}
+
+	exf_getfree("0", &total, &free);
+	trace_info("sd total = %d GB, sd free = %d GB\r\n", total/1024/1024, free/1024/1024);
+	#endif
+
+	int8_t res = -1;
+	res = g_fatfs_obj.fatfs_cfg.f_init(&g_fatfs_obj.fatfs_cfg);
+	if (res == 1)
+	{
+		trace_info("mount sd fail\r\n");
+	}
+	else
+	{
+		trace_info("mount sd successful\r\n");
+	}
+
+	res = f_mount(g_fatfs_obj.fatfs_cfg.fs[0],"0:",1); 					//挂载SD卡 
+	if (res == 0)
+	{
+		trace_info("mount sd successful\r\n");
+	}
+
+	g_fatfs_obj.fatfs_cfg.f_getfree(&g_fatfs_obj.fatfs_cfg, "0");
+	trace_info("sd total = %d GB, sd free = %d GB\r\n", g_fatfs_obj.fatfs_cfg.total/1024/1024, 
+				g_fatfs_obj.fatfs_cfg.free/1024/1024);
+
+	g_fatfs_obj.fatfs_ops.f_showfree(&g_fatfs_obj.fatfs_cfg, "0");
 
 	while (1)
 	{
