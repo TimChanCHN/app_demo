@@ -57,7 +57,7 @@ SRC_APP = \
 handler/letter_shell \
 handler/nt_shell \
 gui/lvgl_app/lv_demos/src/lv_ex_get_started \
-# gui/lvgl_app/lv_demos/src/lv_demo_widgets \
+gui/lvgl_app/lv_demos/src/lv_demo_widgets \
 # handler/cmd_management \
 
 SRC_NTSHELL = \
@@ -82,7 +82,7 @@ $(SDK_DIR)/components/trace		\
 $(SDK_DIR)/components/app_scheduler	\
 $(SDK_DIR)/components/app_timer		\
 $(SDK_DIR)/components/letter-shell/src	\
-#$(SRC_LVGL)
+$(SRC_LVGL)
 
 
 #对应的底层接口

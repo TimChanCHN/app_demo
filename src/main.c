@@ -12,6 +12,7 @@
 #include "lv_obj.h"
 #include "lv_port_disp.h"
 #include "lv_port_indev.h"
+#include "lv_port_fs.h"
 // #include "lv_demo_widgets.h"
 
 #include "lv_ex_get_started.h"
@@ -27,8 +28,6 @@ TIMER_DEF(m_test_timer);
 void test_timer_handler(void *p_data)
 {
     static bool is_led_off = false;
-    uint8_t t = 0;
-    uint16_t lastpos[5][2];		//记录最后一次的数据 
 
     if(is_led_off)
     {
@@ -65,14 +64,36 @@ int main(void)
 	// trace_info("touch init ok\r\n");
 
 	// lvgl设置
-	// lv_init();
-	// lv_port_disp_init();
-	// lv_port_indev_init();
-	// lv_ex_get_started_3();
+	lv_init();
+	lv_port_disp_init();
+	lv_port_indev_init();
+	lv_ex_get_started_3();
+
+	
+	#if 1
+	lv_port_fs_init();
+	lv_fs_res_t fs_res;
+	lv_fs_file_t *file1 = lv_mem_alloc(sizeof(lv_fs_file_t *));
+
+	fs_res=lv_fs_open(file1, "P:/lvgl.txt", LV_FS_MODE_WR | LV_FS_MODE_RD);
+	if(fs_res != LV_FS_RES_OK)
+		printf("open error! code:%d\r\n",fs_res);
+
+	fs_res=lv_fs_write(file1,"test",4,NULL);
+	if(fs_res != LV_FS_RES_OK)
+		printf("write error! code:%d\r\n",fs_res);
+	trace_info("sss\r\n");
+	fs_res=lv_fs_close(file1);
+	if(fs_res != LV_FS_RES_OK)
+		printf("close error! code:%d\r\n",fs_res);
+	trace_info("xxx\r\n");
+	lv_mem_free(file1);
+	#endif
 
 	trace_info("loop\r\n");
 	trace_debug("debug\r\n");
 
+	#if 0
 	while (g_sdio_obj.sdio_ops.sd_init(&g_sdio_obj.sdio_cfg))
 	{
 		g_systick_obj.systick_ops.delay_ms(1000);
@@ -95,33 +116,20 @@ int main(void)
 	}
 	printf("\r\n");
 
-	#if 0
-	uint8_t res = 88;
-	uint32_t total,free;
- 	exfuns_init();							//为fatfs相关变量申请内存				 
-  	res = f_mount(fs[0],"0:",1); 					//挂载SD卡 
-
-	if (res == 0)
-	{
-		trace_info("mount sd successful\r\n");
-	}
-
-	exf_getfree("0", &total, &free);
-	trace_info("sd total = %d GB, sd free = %d GB\r\n", total/1024/1024, free/1024/1024);
-	#endif
 
 	int8_t res = -1;
 	res = g_fatfs_obj.fatfs_cfg.f_init(&g_fatfs_obj.fatfs_cfg);
 	if (res == 1)
 	{
-		trace_info("mount sd fail\r\n");
+		trace_info("fatfs init fail\r\n");
 	}
 	else
 	{
-		trace_info("mount sd successful\r\n");
+		trace_info("fatfs init successful\r\n");
 	}
 
-	res = f_mount(g_fatfs_obj.fatfs_cfg.fs[0],"0:",1); 					//挂载SD卡 
+	// res = f_mount(g_fatfs_obj.fatfs_cfg.fs[0],"0:",1); 					//挂载SD卡 
+	res = g_fatfs_obj.fatfs_ops.f_mount(&g_fatfs_obj.fatfs_cfg, "0:", 1);	//挂载SD卡
 	if (res == 0)
 	{
 		trace_info("mount sd successful\r\n");
@@ -132,12 +140,13 @@ int main(void)
 				g_fatfs_obj.fatfs_cfg.free/1024/1024);
 
 	g_fatfs_obj.fatfs_ops.f_showfree(&g_fatfs_obj.fatfs_cfg, "0");
+	#endif
 
 	while (1)
 	{
 		letter_shell_loop_task();
 		TIMER_SCHEDULER_LOOP();
 
-		// lv_task_handler();
+		lv_task_handler();
 	}
 }
