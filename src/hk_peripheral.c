@@ -558,6 +558,7 @@ sdio_obj_t g_sdio_obj = {
         .sd_init        = hk_sd_init,
         .show_card_info = hk_sdio_show_cardinfo,
         .sd_read_disk   = hk_sd_read_disk,
+        .sd_write_disk  = hk_sd_write_disk,
     },
 };
 
