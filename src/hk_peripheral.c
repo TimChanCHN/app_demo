@@ -319,7 +319,7 @@ tftlcd_driver_t g_lcd35510_driver = {
         .height = 800,
         .id = 0,
         .dir = 0,
-        .background_color = RED,
+        .background_color = WHITE,
         .point_color = BLUE,
     },
 };

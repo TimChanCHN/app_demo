@@ -57,7 +57,7 @@ SRC_APP = \
 handler/letter_shell \
 handler/nt_shell \
 gui/lvgl_app/lv_demos/src/lv_ex_get_started \
-gui/lvgl_app/lv_demos/src/lv_demo_widgets \
+# gui/lvgl_app/lv_demos/src/lv_demo_widgets \
 # handler/cmd_management \
 
 SRC_NTSHELL = \
@@ -65,7 +65,13 @@ $(SDK_DIR)/components/ntshell/core		\
 $(SDK_DIR)/components/ntshell/util		\
 $(SDK_DIR)/components/ntshell/usrcmd	\
 
+SRC_LV_WIDGETS = \
+$(SDK_DIR)/components/lvgl/src/lv_widgets/lv_label.c \
+$(SDK_DIR)/components/lvgl/src/lv_widgets/lv_slider.c \
+$(SDK_DIR)/components/lvgl/src/lv_widgets/lv_bar.c \
+
 SRC_LVGL = \
+$(SDK_DIR)/components/lvgl/porting	\
 $(SDK_DIR)/components/lvgl/src/lv_core	\
 $(SDK_DIR)/components/lvgl/src/lv_draw	\
 $(SDK_DIR)/components/lvgl/src/lv_font	\
@@ -74,7 +80,6 @@ $(SDK_DIR)/components/lvgl/src/lv_hal	\
 $(SDK_DIR)/components/lvgl/src/lv_misc	\
 $(SDK_DIR)/components/lvgl/src/lv_themes	\
 $(SDK_DIR)/components/lvgl/src/lv_widgets	\
-$(SDK_DIR)/components/lvgl/porting	\
 
 #第三方库
 SRC_COMPONENTS = \
@@ -82,6 +87,7 @@ $(SDK_DIR)/components/trace		\
 $(SDK_DIR)/components/app_scheduler	\
 $(SDK_DIR)/components/app_timer		\
 $(SDK_DIR)/components/letter-shell/src	\
+$(SDK_DIR)/components/cmbacktrace	\
 $(SRC_LVGL)
 
 
@@ -129,6 +135,7 @@ src/stm32f10x_it.c  	\
 core/system_stm32f10x.c	\
 $(SRC_STD_LIB)	\
 $(CFILENDIR)	\
+# $(SRC_LV_WIDGETS)	\
 
 VPATH			:= $(SRCDIRS)
 
@@ -175,6 +182,8 @@ INC_COMPONENTS = \
 -I$(SDK_DIR)/components/app_timer	\
 -I$(SDK_DIR)/components/queue	\
 -I$(SDK_DIR)/components/app_scheduler	\
+-I$(SDK_DIR)/components/cmbacktrace	\
+-I$(SDK_DIR)/components/cmbacktrace/Languages	\
 $(INC_LVGL) 
 
 INC_CUSTOMIZE = \
@@ -221,7 +230,8 @@ $(INC_EXTERNAL)
 
 # ASM sources
 ASM_SOURCES =  \
-linker/startup_stm32f103_gcc.s
+linker/startup_stm32f103_gcc.s	\
+$(SDK_DIR)/components/cmbacktrace/cmb_fault.s	\
 
 ##############################################################
 # macros for gcc

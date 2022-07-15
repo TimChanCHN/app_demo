@@ -23,6 +23,11 @@
 #include "ff.h"  
 #include "exfuns.h"
 
+#include "cm_backtrace.h"
+
+#define HARDWARE_VERSION "V1.0.0" 
+#define SOFTWARE_VERSION "V0.1.0"
+
 TIMER_DEF(m_test_timer);
 
 void test_timer_handler(void *p_data)
@@ -52,6 +57,7 @@ int main(void)
 	trace_init();
 	letter_shell_init();
 	// init_nt_shell();
+	cm_backtrace_init("app", HARDWARE_VERSION, SOFTWARE_VERSION);
 
 	TIMER_INIT(&g_timer3_object);
 
@@ -67,17 +73,16 @@ int main(void)
 	lv_init();
 	lv_port_disp_init();
 	lv_port_indev_init();
-	lv_ex_get_started_3();
-
+	// lv_ex_get_started_3();
 	
 	#if 1
 	lv_port_fs_init();
 	lv_fs_res_t fs_res;
 	lv_fs_file_t *file1 = lv_mem_alloc(sizeof(lv_fs_file_t *));
 
-	fs_res=lv_fs_open(file1, "P:/lvgl.txt", LV_FS_MODE_WR | LV_FS_MODE_RD);
-	if(fs_res != LV_FS_RES_OK)
-		printf("open error! code:%d\r\n",fs_res);
+	// fs_res=lv_fs_open(file1, "P:/lvgl.txt", LV_FS_MODE_WR | LV_FS_MODE_RD);
+	// if(fs_res != LV_FS_RES_OK)
+	// 	printf("open error! code:%d\r\n",fs_res);
 
 	fs_res=lv_fs_write(file1,"test",4,NULL);
 	if(fs_res != LV_FS_RES_OK)
@@ -92,56 +97,7 @@ int main(void)
 
 	trace_info("loop\r\n");
 	trace_debug("debug\r\n");
-
-	#if 0
-	while (g_sdio_obj.sdio_ops.sd_init(&g_sdio_obj.sdio_cfg))
-	{
-		g_systick_obj.systick_ops.delay_ms(1000);
-		trace_info("sd init fail...\r\n");
-	}
-	trace_info("sd init ok...\r\n");
-	g_sdio_obj.sdio_ops.show_card_info(&g_sdio_obj.sdio_cfg);
-
-	uint8_t *buf;
-	uint16_t cnt = 0;
-	buf = (uint8_t *)malloc(512);
-	trace_info("buf addr = 0x%x\r\n", buf);
-
-	g_sdio_obj.sdio_ops.sd_read_disk(&g_sdio_obj.sdio_cfg, buf, 0, 1);
-
-	trace_info("sector 0 data: \r\n");
-	for (cnt = 0; cnt < 512; cnt++)
-	{
-		printf("%x ", buf[cnt]);
-	}
-	printf("\r\n");
-
-
-	int8_t res = -1;
-	res = g_fatfs_obj.fatfs_cfg.f_init(&g_fatfs_obj.fatfs_cfg);
-	if (res == 1)
-	{
-		trace_info("fatfs init fail\r\n");
-	}
-	else
-	{
-		trace_info("fatfs init successful\r\n");
-	}
-
-	// res = f_mount(g_fatfs_obj.fatfs_cfg.fs[0],"0:",1); 					//挂载SD卡 
-	res = g_fatfs_obj.fatfs_ops.f_mount(&g_fatfs_obj.fatfs_cfg, "0:", 1);	//挂载SD卡
-	if (res == 0)
-	{
-		trace_info("mount sd successful\r\n");
-	}
-
-	g_fatfs_obj.fatfs_cfg.f_getfree(&g_fatfs_obj.fatfs_cfg, "0");
-	trace_info("sd total = %d GB, sd free = %d GB\r\n", g_fatfs_obj.fatfs_cfg.total/1024/1024, 
-				g_fatfs_obj.fatfs_cfg.free/1024/1024);
-
-	g_fatfs_obj.fatfs_ops.f_showfree(&g_fatfs_obj.fatfs_cfg, "0");
-	#endif
-
+	lv_ex_get_started_3();
 	while (1)
 	{
 		letter_shell_loop_task();

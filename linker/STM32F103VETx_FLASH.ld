@@ -53,6 +53,7 @@
 ENTRY(Reset_Handler)
 
 /* Highest address of the user mode stack */
+_sstack = 0x20000000;
 _estack = 0x20010000;    /* end of RAM */
 /* Generate a link error if heap and stack don't fit into RAM */
 _Min_Heap_Size = 0x2000;       /* required amount of heap, lvgl recommend heap > 8kb  */
@@ -80,6 +81,7 @@ SECTIONS
   .text :
   {
     . = ALIGN(4);
+    _stext = .;
     *(.text)           /* .text sections (code) */
     *(.text*)          /* .text* sections (code) */
     *(.glue_7)         /* glue arm to thumb code */
