@@ -17,11 +17,13 @@ readdfu:
 	openocd -f $(SDK_DIR)/scripts/openocd/stm32f030_jlink.cfg -c init -c targets -c 'halt' -c 'flash read_bank 0 image.dfu 0x60000 0x20000' -c shutdown
 
 gdbs:
-	openocd -f $(SDK_DIR)/scripts/openocd/stm32f030_jlink.cfg
+	# openocd -f $(SDK_DIR)/scripts/openocd/stm32f030_jlink.cfg
+	openocd -f $(SDK_DIR)/scripts/openocd/stlink-v2.cfg -f $(SDK_DIR)/scripts/openocd/hk32f1x.cfg -c init -c 'reset halt'
 
 gdb:
-	arm-none-eabi-gdb $(BUILD_DIR)/$(TARGET).elf -ex 'target remote localhost:3333' -ex 'monitor reset halt' -ex 'load'
-
+	# arm-none-eabi-gdb $(BUILD_DIR)/$(TARGET).elf -ex 'target remote localhost:3333' -ex 'monitor reset halt' -ex 'load'
+	arm-none-eabi-gdb
+	
 release:
 	cp $(BUILD_DIR)/$(TARGET).hex  $(BUILD_DIR)/$(TARGET)_$(VERSION)_$(TIMESTAMP).hex
 	cp $(BUILD_DIR)/$(TARGET).bin  $(BUILD_DIR)/$(TARGET)_$(VERSION)_$(TIMESTAMP).bin
