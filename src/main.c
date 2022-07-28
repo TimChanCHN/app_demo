@@ -21,7 +21,6 @@
 #include <stdlib.h>
 
 #include "ff.h"  
-#include "exfuns.h"
 
 #include "cm_backtrace.h"
 
@@ -73,18 +72,18 @@ int main(void)
 	lv_init();
 	lv_port_disp_init();
 	lv_port_indev_init();
-	// lv_ex_get_started_3();
-	
+	lv_port_fs_init();
 
+	lv_ex_get_started_3();
 
-	#if 1
-	while (g_sdio_obj.sdio_ops.sd_init(&g_sdio_obj.sdio_cfg))
+	#if 0
+	// test sdio
+    while (g_sdio_obj.sdio_ops.sd_init(&g_sdio_obj.sdio_cfg))
 	{
 		g_systick_obj.systick_ops.delay_ms(1000);
 		trace_info("sd init fail...\r\n");
 	}
 	trace_info("sd init ok...\r\n");
-	g_sdio_obj.sdio_ops.show_card_info(&g_sdio_obj.sdio_cfg);
 
 	uint8_t *buf;
 	uint16_t cnt = 0;
@@ -100,46 +99,95 @@ int main(void)
 	}
 	printf("\r\n");
 
-	int8_t res = -1;
-	res = g_fatfs_obj.fatfs_cfg.f_init(&g_fatfs_obj.fatfs_cfg);
-	if (res == 1)
+	// test fatfs
+	FATFS fs;
+	FRESULT fres;
+
+	fres = f_mount(&fs, "0:", 1);
+	while (fres)
 	{
-		trace_info("fatfs init fail\r\n");
+		g_systick_obj.systick_ops.delay_ms(1000);
+		trace_info("mount sd error %d\r\n", fres);
+	}
+	trace_info("mount ok\r\n");
+
+	FIL file;
+	const char *path = "0:/lvgl.txt";
+
+	fres = f_open(&file, path, (FA_READ | FA_WRITE));
+	if (fres)
+	{
+		trace_info("open file fail: %d\r\n", fres);
+		return ;
 	}
 	else
 	{
-		trace_info("fatfs init successful\r\n");
+		trace_info("open file ok\r\n");
 	}
 
-	res = g_fatfs_obj.fatfs_ops.f_mount(&g_fatfs_obj.fatfs_cfg, "0:", 1);	//挂载SD卡
-	if (res == 0)
+	char buff[] = "cxtcfn";
+	uint16_t bw;
+    fres = f_write(&file, buff, sizeof(buff), &bw);
+    if (fres != FR_OK)
+    {
+        trace_info("write file error : %d\r\n", fres);
+    }
+    else
+    {
+        trace_info("write ok. write %d bytes.\r\n", bw);
+    }
+
+	char buff1[10];
+	uint16_t br;
+	fres = f_lseek(&file, 0);
+    fres = f_read(&file, buff1, sizeof(buff), &br);
+    if (fres != FR_OK)
+    {
+        trace_info("read file error : %d\r\n", fres);
+    }
+    else
+    {
+        trace_info("read ok. read %d bytes.\r\n", bw);
+		trace_info("buff : %s.\r\n", buff1);
+    }
+
+	fres = f_close(&file);
+	if (fres)
 	{
-		trace_info("mount sd successful\r\n");
+		trace_info("close file fail: %d\r\n", fres);
+		return ;
 	}
-
-	g_fatfs_obj.fatfs_cfg.f_getfree(&g_fatfs_obj.fatfs_cfg, "0");
-	trace_info("sd total = %d GB, sd free = %d GB\r\n", g_fatfs_obj.fatfs_cfg.total/1024/1024, 
-				g_fatfs_obj.fatfs_cfg.free/1024/1024);
-
-	g_fatfs_obj.fatfs_ops.f_showfree(&g_fatfs_obj.fatfs_cfg, "0");
+	else
+	{
+		trace_info("close file ok\r\n");
+	}
 	#endif
 
 	#if 1
-	lv_port_fs_init();
 	lv_fs_res_t fs_res;
 	lv_fs_file_t *file1 = lv_mem_alloc(sizeof(lv_fs_file_t *));
+	uint8_t buffer[10];
 
-	fs_res=lv_fs_open(file1, "P:/lvgl.txt", LV_FS_MODE_WR | LV_FS_MODE_RD);
+	fs_res=lv_fs_open(file1, "0:/lvgl.txt", LV_FS_MODE_WR | LV_FS_MODE_RD);
 	if(fs_res != LV_FS_RES_OK)
 		printf("open error! code:%d\r\n",fs_res);
 
+	#if 0
 	fs_res=lv_fs_write(file1,"test",4,NULL);
 	if(fs_res != LV_FS_RES_OK)
 		printf("write error! code:%d\r\n",fs_res);
+
+	fs_res=lv_fs_read(file1,buffer,4,NULL);
+	if(fs_res != LV_FS_RES_OK)
+		printf("read error! code:%d\r\n",fs_res);
+	trace_info("read buf = %s\r\n", buffer);
 	trace_info("sss\r\n");
+	#endif
+
 	fs_res=lv_fs_close(file1);
 	if(fs_res != LV_FS_RES_OK)
 		printf("close error! code:%d\r\n",fs_res);
+
 	trace_info("xxx\r\n");
 	lv_mem_free(file1);
 	#endif
@@ -147,7 +195,6 @@ int main(void)
 
 	trace_info("loop\r\n");
 	trace_debug("debug\r\n");
-	lv_ex_get_started_3();
 	while (1)
 	{
 		letter_shell_loop_task();

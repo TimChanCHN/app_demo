@@ -53,11 +53,11 @@
 ENTRY(Reset_Handler)
 
 /* Highest address of the user mode stack */
-_sstack = 0x20000000;
+/* _sstack = 0x20000400; */
 _estack = 0x20010000;    /* end of RAM */
 /* Generate a link error if heap and stack don't fit into RAM */
-_Min_Heap_Size = 0x2800;       /* required amount of heap, lvgl recommend heap > 8kb  */
-_Min_Stack_Size = 0x2800;      /* required amount of stack, lvgl recommend stack > 8kb   */
+_Min_Heap_Size = 0x2000;       /* required amount of heap, lvgl recommend heap > 8kb  */
+_Min_Stack_Size = 0x2000;      /* required amount of stack, lvgl recommend stack > 8kb   */
 
 /* Specify the memory areas */
 MEMORY
@@ -179,6 +179,7 @@ SECTIONS
     PROVIDE ( end = . );
     PROVIDE ( _end = . );
     . = . + _Min_Heap_Size;
+    _sstack = .;
     . = . + _Min_Stack_Size;
     . = ALIGN(8);
   } >RAM

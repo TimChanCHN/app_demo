@@ -113,9 +113,9 @@ $(SDK_DIR)/drivers/touch				\
 $(SDK_DIR)/drivers/eeprom				\
 
 SRC_EXTERNAL = \
-$(SDK_DIR)/external/fatfs/exfuns	\
 $(SDK_DIR)/external/fatfs/src		\
 $(SDK_DIR)/external/fatfs/src/option\
+# $(SDK_DIR)/external/fatfs/exfuns	\
 
 
 SRCDIRS	:= \
