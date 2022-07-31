@@ -76,7 +76,7 @@ int main(void)
 
 	lv_ex_get_started_3();
 
-	#if 0
+	#if 1
 	// test sdio
     while (g_sdio_obj.sdio_ops.sd_init(&g_sdio_obj.sdio_cfg))
 	{
@@ -166,6 +166,7 @@ int main(void)
 	#if 1
 	lv_fs_res_t fs_res;
 	lv_fs_file_t *file1 = lv_mem_alloc(sizeof(lv_fs_file_t *));
+	// lv_fs_file_t *file1;
 	uint8_t buffer[10];
 
 	fs_res=lv_fs_open(file1, "0:/lvgl.txt", LV_FS_MODE_WR | LV_FS_MODE_RD);

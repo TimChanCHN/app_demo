@@ -1,6 +1,6 @@
 TARGET = app
 
-DEBUG = 1
+DEBUG = 0
 # optimization
 OPT = -O3 -g
 
@@ -65,10 +65,6 @@ $(SDK_DIR)/components/ntshell/core		\
 $(SDK_DIR)/components/ntshell/util		\
 $(SDK_DIR)/components/ntshell/usrcmd	\
 
-SRC_LV_WIDGETS = \
-$(SDK_DIR)/components/lvgl/src/lv_widgets/lv_label.c \
-$(SDK_DIR)/components/lvgl/src/lv_widgets/lv_slider.c \
-$(SDK_DIR)/components/lvgl/src/lv_widgets/lv_bar.c \
 
 SRC_LVGL = \
 $(SDK_DIR)/components/lvgl/porting	\
@@ -212,8 +208,8 @@ INC_DRIVER = \
 -I$(SDK_DIR)/drivers/eeprom		\
 
 INC_EXTERNAL = \
+-I$(SDK_DIR)/external/fatfs/src	\
 -I$(SDK_DIR)/external/fatfs/exfuns	\
--I$(SDK_DIR)/external/fatfs/src		\
 # $(SDK_DIR)/external/fatfs			\
 
 C_INCLUDES =  \
