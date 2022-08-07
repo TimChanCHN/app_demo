@@ -28,6 +28,25 @@
 #define SOFTWARE_VERSION "V0.1.0"
 
 TIMER_DEF(m_test_timer);
+LV_FONT_DECLARE(fontCHN12);
+
+void show_my_font(void)
+{
+	static lv_style_t style_font;
+	lv_style_init(&style_font);
+	lv_style_set_text_font(&style_font, LV_STATE_DEFAULT, &fontCHN12);  //样式使用自定义字体
+	lv_style_set_text_color(&style_font, LV_STATE_DEFAULT, LV_COLOR_BLACK);   //设置字体颜色
+
+
+    lv_obj_t * btn = lv_btn_create(lv_scr_act(), NULL);     /*Add a button the current screen*/
+    lv_obj_set_pos(btn, 0, 0);                            /*Set its position*/
+    lv_obj_set_size(btn, 100, 200);                          /*Set its size*/
+    // lv_obj_set_event_cb(btn, btn_event_cb);                 /*Assign a callback to the button*/
+
+    lv_obj_t * label = lv_label_create(btn, NULL);          /*Add a label to the button*/
+    lv_label_set_text(label, "我");                     /*Set the labels text*/
+	lv_obj_add_style(label, LV_OBJ_PART_MAIN, &style_font);
+}
 
 void test_timer_handler(void *p_data)
 {
@@ -70,52 +89,10 @@ int main(void)
 	lv_port_fs_init();
 
 
-	lv_fs_res_t fs_res;
-	lv_fs_file_t *file1 = lv_mem_alloc(sizeof(lv_fs_file_t));
-	const char *path1 = "S:/test/lvgl.txt";
-
-	fs_res=lv_fs_open(file1, path1, LV_FS_MODE_WR | LV_FS_MODE_RD);
-	if(fs_res != LV_FS_RES_OK)
-		printf("open error! code:%d\r\n",fs_res);
-
-	#if 1
-	uint16_t bw, br = 0;
-	uint8_t read_buff[30] = {0};
-	char buff3[] = "TimChan don't like valentine";
-
-	fs_res=lv_fs_write(file1, (void*)buff3, sizeof(buff3), &bw);
-	if(fs_res != LV_FS_RES_OK)
-	{
-		printf("write error! code:%d\r\n",fs_res);
-	}
-	else
-	{
-		trace_info("write ok. write %d bytes.\r\n", bw);
-	}
-
-	fs_res = lv_fs_seek(file1, 0);
-	fs_res = lv_fs_read(file1,read_buff,sizeof(buff3),&br);
-	if(fs_res != LV_FS_RES_OK)
-	{
-		printf("read error! code:%d\r\n",fs_res);
-	}
-	else
-	{
-		trace_info("read ok. %d bytes to be read.\r\n",br);
-		trace_info("read buf = %s\r\n", read_buff);
-	}
-	#endif
-
-	fs_res=lv_fs_close(file1);
-	if(fs_res != LV_FS_RES_OK)
-		printf("close error! code:%d\r\n",fs_res);
-
-	trace_info("xxx\r\n");
-	lv_mem_free(file1);
-
 	trace_info("loop\r\n");
 	trace_debug("debug\r\n");
-	lv_ex_get_started_3();
+
+	show_my_font();
 
 	while (1)
 	{
