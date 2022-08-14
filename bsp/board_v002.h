@@ -8,7 +8,11 @@
 #define LED_PORT                            GPIOB
 #define LED_PORT_PERIPH_CLK                 RCC_APB2Periph_GPIOB
 
-
+#define KEY1_PIN                            GPIO_Pin_0
+#define KEY2_PIN                            GPIO_Pin_0
+#define KEY3_PIN                            GPIO_Pin_0
+#define KEY_PORT                            GPIOB
+#define KEY_PORT_PERIPH_CLK                 RCC_APB2Periph_GPIOB
 
 /* UART */
 #define TRACE_UART                          USART1
@@ -113,5 +117,14 @@
 #define SDIO_DAT_PIN                            (GPIO_Pin_8 | GPIO_Pin_9 | GPIO_Pin_10 | GPIO_Pin_11)
 #define SDIO_DAT_PORT                           GPIOC
 #define SDIO_DAT_PERIPH_CLK                     RCC_APB2Periph_GPIOC
+
+/* EEPROM */
+#define EEPROM_SDA_PIN                           GPIO_Pin_7
+#define EEPROM_SDA_PORT                          GPIOB
+#define EEPROM_SDA_PERIPH_CLK                    RCC_APB2Periph_GPIOB
+
+#define EEPROM_SCL_PIN                           GPIO_Pin_6
+#define EEPROM_SCL_PORT                          GPIOB
+#define EEPROM_SCL_PERIPH_CLK                    RCC_APB2Periph_GPIOB
 
 #endif

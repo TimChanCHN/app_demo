@@ -98,6 +98,22 @@ gpio_object_t g_led_obj = {
     },
 };
 
+gpio_object_t g_key_obj = {
+    .gpio_cfg = {
+        .gpio_clk = KEY_PORT_PERIPH_CLK,
+        .p_port = (void *)KEY_PORT,
+        .gpio_pin = KEY1_PIN | KEY2_PIN | KEY3_PIN,
+        .gpio_dir = GPIO_DIR_INPUT,
+        .flag = GPIO_TYPE_IO,
+        .mode = GPIO_Mode_IPU,
+    },
+
+    .gpio_ops = {
+        .gpio_init = hk_gpio_obj_init,
+        .gpio_input_get = hk_gpio_obj_in_get,
+    },
+};
+
 timer_object_t g_timer3_object = {
     .timer_cfg = {
         .period = 1000,             //计数到 1K 时溢出
@@ -459,17 +475,18 @@ touch_object_t g_touch_obj = {
     },
 };
 touch_object_t *g_touch_lvgl_obj = &g_touch_obj;
-// sda --> PB7, scl --> PB6
 
-i2c_object_t g_i2c_obj = {
+// sda --> PB7, scl --> PB6
+i2c_object_t eeprom_obj = {
     .i2c_cfg = {
         .sda = {
             .gpio_cfg = {
-                .gpio_clk = RCC_APB2Periph_GPIOB,
-                .p_port = (void *)GPIOB,
-                .gpio_pin = GPIO_Pin_7,
+                .gpio_clk = EEPROM_SDA_PERIPH_CLK,
+                .p_port = (void *)EEPROM_SDA_PORT,
+                .gpio_pin = EEPROM_SDA_PIN,
                 .flag = GPIO_TYPE_IO,
                 .gpio_dir = GPIO_DIR_OUTPUR,
+                .mode = GPIO_Mode_IPU,
             },
 
             .gpio_ops = {
@@ -482,11 +499,12 @@ i2c_object_t g_i2c_obj = {
         },
         .scl = {
             .gpio_cfg = {
-                .gpio_clk = RCC_APB2Periph_GPIOB,
-                .p_port = (void *)GPIOB,
-                .gpio_pin = GPIO_Pin_6,
+                .gpio_clk = EEPROM_SCL_PERIPH_CLK,
+                .p_port = (void *)EEPROM_SCL_PORT,
+                .gpio_pin = EEPROM_SCL_PIN,
                 .flag = GPIO_TYPE_IO,
                 .gpio_dir = GPIO_DIR_OUTPUR,
+                .mode = GPIO_Mode_IPU,
             },
 
             .gpio_ops = {

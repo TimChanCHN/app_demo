@@ -13,14 +13,13 @@
 #include "lv_port_disp.h"
 #include "lv_port_indev.h"
 #include "lv_port_fs.h"
-// #include "lv_demo_widgets.h"
 
+#include "lv_ui.h"
 #include "lv_ex_get_started.h"
 
+#include "24cxx.h"
 #include "gt9147.h"
 #include <stdlib.h>
-
-#include "ff.h"  
 
 #include "cm_backtrace.h"
 
@@ -72,13 +71,13 @@ int main(void)
 	g_led_obj.gpio_ops.gpio_init(&g_led_obj.gpio_cfg);
 	g_led_obj.gpio_ops.gpio_output_set(&g_led_obj.gpio_cfg, 1);
 
+	eeprom_init(&eeprom_obj);
+
 	trace_init();
 	letter_shell_init();
-	// init_nt_shell();
 	cm_backtrace_init("app", HARDWARE_VERSION, SOFTWARE_VERSION);
 
 	TIMER_INIT(&g_timer3_object);
-
 	TIMER_CREATE(&m_test_timer, false, false, test_timer_handler);
 	TIMER_START(m_test_timer, 500);
 
@@ -88,11 +87,13 @@ int main(void)
 	lv_port_indev_init();
 	lv_port_fs_init();
 
-
 	trace_info("loop\r\n");
 	trace_debug("debug\r\n");
 
-	show_my_font();
+	lv_ex_get_started_3();
+
+
+	// main_menu();
 
 	while (1)
 	{

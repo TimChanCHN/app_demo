@@ -57,6 +57,7 @@ SRC_APP = \
 handler/letter_shell \
 handler/nt_shell \
 gui/lvgl_app/lv_demos/src/lv_ex_get_started \
+gui/lvgl_app/lv_ui							\
 # gui/lvgl_app/lv_demos/src/lv_demo_widgets \
 # handler/cmd_management \
 
@@ -164,6 +165,7 @@ INC_APP = \
 -Igui/lvgl_app/		\
 -Igui/lvgl_app/lv_demos		\
 -Igui/lvgl_app/lv_demos/src/lv_ex_get_started		\
+-Igui/lvgl_app/lv_ui								\
 
 
 # 第三方库头文件
