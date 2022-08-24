@@ -30,7 +30,7 @@ gpio_ops_t g_gpio_ops = {
             .gpio_fix_output = hk_gpio_fix_output,
 };
 
-// systick设置
+/********************  systick  ********************/
 systick_object_t g_systick_obj = {
     .systick_cfg = {
         .clk_div    =   SysTick_CLKSource_HCLK_Div8,
@@ -45,7 +45,7 @@ systick_object_t g_systick_obj = {
     },
 };
 
-
+/********************  uart  ********************/
 hk_uart_info_t g_hk_uart_info = {
     .uart = USART1,
     .tx_port = TRACE_UART_TX_GPIO_PORT,
@@ -91,6 +91,7 @@ usart_object_t g_usart_object = {
   }
 };
 
+/********************  led  ********************/
 gpio_object_t g_led_obj = {
     .gpio_cfg = {
         .gpio_clk = LED_PORT_PERIPH_CLK,
@@ -108,22 +109,7 @@ gpio_object_t g_led_obj = {
     },
 };
 
-gpio_object_t g_key_obj = {
-    .gpio_cfg = {
-        .gpio_clk = KEY_PORT_PERIPH_CLK,
-        .p_port = (void *)KEY_PORT,
-        .gpio_pin = KEY1_PIN | KEY2_PIN | KEY3_PIN,
-        .gpio_dir = GPIO_DIR_INPUT,
-        .flag = GPIO_TYPE_IO,
-        .mode = GPIO_Mode_IPU,
-    },
-
-    .gpio_ops = {
-        .gpio_init = hk_gpio_obj_init,
-        .gpio_input_get = hk_gpio_obj_in_get,
-    },
-};
-
+/********************  timer  ********************/
 timer_object_t g_timer3_object = {
     .timer_cfg = {
         .period = 1000,             //计数到 1K 时溢出
@@ -141,12 +127,12 @@ timer_object_t g_timer3_object = {
 };
 
 // PA0
-
-gpio_object_t g_key0_obj = {
+/********************  key1 & exit0  ********************/
+gpio_object_t g_key1_obj = {
     .gpio_cfg = {
-        .gpio_clk = RCC_APB2Periph_GPIOA,
-        .p_port = (void *)GPIOA,
-        .gpio_pin = GPIO_Pin_0,
+        .gpio_clk = KEY_PORT_PERIPH_CLK,
+        .p_port = (void *)KEY_PORT,
+        .gpio_pin = KEY1_PIN,
         .gpio_dir = GPIO_DIR_INPUT,
         .flag = GPIO_TYPE_IO,
         .mode = GPIO_Mode_IPU,
@@ -162,7 +148,7 @@ gpio_object_t g_key0_obj = {
 };
 
 hk_exit_pin_cfg g_exit0_pin_cfg = {
-    .exit_gpio_cfg          = &g_key0_obj,
+    .exit_gpio_cfg          = &g_key1_obj,
     .exit_clk               = RCC_APB2Periph_AFIO,
     .exit_pin_port_source   = GPIO_PortSourceGPIOA,
     .exit_pin_source        = GPIO_PinSource0,
@@ -192,10 +178,111 @@ exit_object_t g_exit0_obj = {
     }
 };
 
+// PA1
+/********************  key2 & exit1  ********************/
+gpio_object_t g_key2_obj = {
+    .gpio_cfg = {
+        .gpio_clk = KEY_PORT_PERIPH_CLK,
+        .p_port = (void *)KEY_PORT,
+        .gpio_pin = KEY2_PIN,
+        .gpio_dir = GPIO_DIR_INPUT,
+        .flag = GPIO_TYPE_IO,
+        .mode = GPIO_Mode_IPU,
+    },
 
+    .gpio_ops = {
+        .gpio_init          = hk_gpio_obj_init,
+        .gpio_output_set    = hk_gpio_obj_out_set,
+        .gpio_fix_input     = hk_gpio_fix_input,
+        .gpio_fix_output    = hk_gpio_fix_output,
+        .gpio_input_get     = hk_gpio_obj_in_get,
+    },
+};
 
+hk_exit_pin_cfg g_exit1_pin_cfg = {
+    .exit_gpio_cfg          = &g_key2_obj,
+    .exit_clk               = RCC_APB2Periph_AFIO,
+    .exit_pin_port_source   = GPIO_PortSourceGPIOA,
+    .exit_pin_source        = GPIO_PinSource1,
+};
 
-/* ST7789 */
+hk_exit_cfg g_exit1_cfg = {
+    .exit_mode      = EXTI_Mode_Interrupt,
+    .exit_trigger   = EXTI_Trigger_Rising,
+    // .exit_line_cmd  = ,
+    .exit_line      = EXTI_Line1,
+    .exit_irqn      = EXTI1_IRQn,
+    .exit_pre_prio  = 0x02,
+    .exit_sub_prio  = 0x02,
+};
+
+exit_object_t g_exit1_obj = {
+    .exit_cfg = {
+        .p_pin_cfg  = (void *)&g_exit1_pin_cfg,
+        .p_exit_cfg = (void *)&g_exit1_cfg,
+        .delay_ms   = hk_delay_ms,
+    },
+    .exit_ops = {
+        .exit_init      =   hk_exit_init,
+        .exit_enable    =   hk_exit_enable,
+        .exit_disable   =   hk_exit_disable,
+        .exit_irq_cb    =   exit1_irq_handler,
+    }
+};
+
+// PC13
+/********************  key3 & exit1  ********************/
+gpio_object_t g_key3_obj = {
+    .gpio_cfg = {
+        .gpio_clk = KEY3_PORT_PERIPH_CLK,
+        .p_port = (void *)KEY3_PORT,
+        .gpio_pin = KEY3_PIN,
+        .gpio_dir = GPIO_DIR_INPUT,
+        .flag = GPIO_TYPE_IO,
+        .mode = GPIO_Mode_IPU,
+    },
+
+    .gpio_ops = {
+        .gpio_init          = hk_gpio_obj_init,
+        .gpio_output_set    = hk_gpio_obj_out_set,
+        .gpio_fix_input     = hk_gpio_fix_input,
+        .gpio_fix_output    = hk_gpio_fix_output,
+        .gpio_input_get     = hk_gpio_obj_in_get,
+    },
+};
+
+hk_exit_pin_cfg g_exit13_pin_cfg = {
+    .exit_gpio_cfg          = &g_key3_obj,
+    .exit_clk               = RCC_APB2Periph_AFIO,
+    .exit_pin_port_source   = GPIO_PortSourceGPIOC,
+    .exit_pin_source        = GPIO_PinSource13,
+};
+
+hk_exit_cfg g_exit13_cfg = {
+    .exit_mode      = EXTI_Mode_Interrupt,
+    .exit_trigger   = EXTI_Trigger_Rising,
+    // .exit_line_cmd  = ,
+    .exit_line      = EXTI_Line13,
+    .exit_irqn      = EXTI15_10_IRQn,
+    .exit_pre_prio  = 0x02,
+    .exit_sub_prio  = 0x03,
+};
+
+exit_object_t g_exit13_obj = {
+    .exit_cfg = {
+        .p_pin_cfg  = (void *)&g_exit13_pin_cfg,
+        .p_exit_cfg = (void *)&g_exit13_cfg,
+        .delay_ms   = hk_delay_ms,
+    },
+    .exit_ops = {
+        .exit_init      =   hk_exit_init,
+        .exit_enable    =   hk_exit_enable,
+        .exit_disable   =   hk_exit_disable,
+        .exit_irq_cb    =   exit13_irq_handler,
+    }
+};
+
+/********************  ST7789  ********************/
 st7789_8080_info_t g_st7789_info = {
     .cs_pin = {
         .gpio_cfg = {
@@ -327,8 +414,7 @@ tftlcd_object_t g_tftlcd_obj = {
     },
 };
 
-/* NT35510 */
-// 1. 构建一个driver对象
+/********************  nt35510  ********************/
 nt35510_fsmc_info_t g_nt35510 = {
     .rst_pin = {
         .gpio_cfg = {
@@ -434,7 +520,7 @@ tftlcd_object_t g_tftlcd3510_obj = {
 
 tftlcd_object_t *g_tftlcd_lvgl_obj = &g_tftlcd3510_obj;
 
-/* touch 配置 */
+/********************  touch setting:9147  ********************/
 tp_dev_t g_tp_dev = {
     // .x = 0, 
     // .y = 0,
@@ -443,8 +529,6 @@ tp_dev_t g_tp_dev = {
     .sta = 0,				
     .touchtype = 0,
 };
-
-
 
 touch_object_t g_touch_obj = {
     .touch_cfg = {
@@ -542,6 +626,7 @@ touch_object_t g_touch_obj = {
 touch_object_t *g_touch_lvgl_obj = &g_touch_obj;
 
 // sda --> PB7, scl --> PB6
+/********************  eeprom  ********************/
 i2c_object_t eeprom_obj = {
     .i2c_cfg = {
         .sda = {
@@ -594,6 +679,7 @@ i2c_object_t eeprom_obj = {
     },
 };
 
+/********************  sdio  ********************/
 hk_sdio_hw_cfg_t g_sdio_hw_cfg = {
     .sd_gpio1   = {
         .gpio_cfg = {

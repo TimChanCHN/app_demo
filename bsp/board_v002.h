@@ -10,9 +10,12 @@
 
 #define KEY1_PIN                            GPIO_Pin_0
 #define KEY2_PIN                            GPIO_Pin_1
-#define KEY3_PIN                            GPIO_Pin_2
 #define KEY_PORT                            GPIOA
 #define KEY_PORT_PERIPH_CLK                 RCC_APB2Periph_GPIOA
+
+#define KEY3_PIN                            GPIO_Pin_13
+#define KEY3_PORT                           GPIOC
+#define KEY3_PORT_PERIPH_CLK                RCC_APB2Periph_GPIOC
 
 /* UART */
 #define TRACE_UART                          USART1

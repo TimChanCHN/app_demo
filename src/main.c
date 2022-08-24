@@ -23,6 +23,8 @@
 
 #include "cm_backtrace.h"
 
+#include "hk_exit.h"
+
 #define HARDWARE_VERSION "V1.0.0" 
 #define SOFTWARE_VERSION "V0.1.0"
 
@@ -51,16 +53,29 @@ void test_timer_handler(void *p_data)
 {
     static bool is_led_off = false;
 
-    // if(is_led_off)
-    // {
-    //     g_led_obj.gpio_ops.gpio_output_set(&g_led_obj.gpio_cfg, is_led_off);
-    //     is_led_off = false;
-    // }
-    // else
-    // {
-    //     g_led_obj.gpio_ops.gpio_output_set(&g_led_obj.gpio_cfg, is_led_off);
-    //     is_led_off = true;
-    // }
+    // hk_exit_pin_cfg *p_hk_exit_pin_cfg = (hk_exit_pin_cfg *)g_exit13_obj.exit_cfg.p_pin_cfg;
+    // gpio_object_t *p_exit_gpio = p_hk_exit_pin_cfg->exit_gpio_cfg;
+	// uint8_t keyval = 0;
+
+	// p_exit_gpio->gpio_ops.gpio_input_get(&p_exit_gpio->gpio_cfg, &keyval);
+	// if (keyval == 0)
+	// {
+	// 	trace_info("key3 is pressed.\r\n");
+	// }
+
+	scan_menu();
+
+	
+    if(is_led_off)
+    {
+        g_led_obj.gpio_ops.gpio_output_set(&g_led_obj.gpio_cfg, is_led_off);
+        is_led_off = false;
+    }
+    else
+    {
+        g_led_obj.gpio_ops.gpio_output_set(&g_led_obj.gpio_cfg, is_led_off);
+        is_led_off = true;
+    }
 
     // trace_debug("ticks = %lu \n\r", (uint32_t)g_timer3_object.timer_cfg.ticks);
 }
@@ -78,6 +93,8 @@ int main(void)
 	cm_backtrace_init("app", HARDWARE_VERSION, SOFTWARE_VERSION);
 
 	g_exit0_obj.exit_ops.exit_init(&g_exit0_obj.exit_cfg);
+	g_exit1_obj.exit_ops.exit_init(&g_exit1_obj.exit_cfg);
+	g_exit13_obj.exit_ops.exit_init(&g_exit13_obj.exit_cfg);
 
 	TIMER_INIT(&g_timer3_object);
 	TIMER_CREATE(&m_test_timer, false, false, test_timer_handler);
@@ -102,7 +119,7 @@ int main(void)
 	// lv_ex_get_started_3();
 
 
-	// main_menu();
+	main_menu();
 
 	while (1)
 	{

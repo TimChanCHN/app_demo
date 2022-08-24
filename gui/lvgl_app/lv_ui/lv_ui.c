@@ -4,15 +4,34 @@
 #include "24cxx.h"
 #include "hk_peripheral.h"
 #include "trace.h"
+#include "hk_exit.h"
+
+typedef void (*sub_menu_handler)(void);
 
 static lv_style_t style_rel;
 static lv_style_t style_pre;
 static lv_obj_t * btn[5];
 static lv_obj_t * label[5];
 
+static lv_obj_t * submenu;
+static lv_obj_t * sublabel;
+
 static lv_ui_info_t m_ui_info;
+static sub_menu_handler p_sub_menu[5]; 
 
 LV_FONT_DECLARE(fontCHN12);
+
+void set_statement_person(void)
+{
+    submenu = lv_btn_create(lv_scr_act(), NULL);    
+    // lv_obj_set_pos(submenu, 0, (i+1)*80);                           
+    lv_obj_set_size(submenu, LV_HOR_RES_MAX/2, LV_VER_RES_MAX/2);                        
+    lv_obj_align_mid(submenu, lv_scr_act(), LV_ALIGN_CENTER, 0, 0);
+    lv_obj_add_style(submenu, LV_BTN_PART_MAIN, &style_rel);
+
+    sublabel = lv_label_create(submenu, NULL);   
+    lv_label_set_text_fmt(sublabel, "请输入发言人数:[%d]", m_ui_info.person);
+}
 
 void main_menu(void)
 {
@@ -21,6 +40,7 @@ void main_menu(void)
     m_ui_info.vol_input = 33;
     m_ui_info.vol_output = 88;
     m_ui_info.index = 0;
+    m_ui_info.selected = 0;
 
     uint8_t buf1[] = "helloworld!";
     uint8_t buf2[20];
@@ -120,4 +140,41 @@ void main_menu(void)
     lv_label_set_text(label[4], "系统设置");  
 
     lv_obj_add_style(btn[m_ui_info.index], LV_BTN_PART_MAIN, &style_pre);
+
+    // init sub_menu_list
+    p_sub_menu[1] = set_statement_person;
+}
+
+void scan_menu(void)
+{
+    hk_exit_pin_cfg *p_hk_exit_pin_cfg = (hk_exit_pin_cfg *)g_exit0_obj.exit_cfg.p_pin_cfg;
+    hk_exit_pin_cfg *p_hk_exit_pin_cfg1 = (hk_exit_pin_cfg *)g_exit1_obj.exit_cfg.p_pin_cfg;
+
+    if (p_hk_exit_pin_cfg->press_cnt > 4)
+    {
+        p_hk_exit_pin_cfg->press_cnt = 0;
+    }
+
+    if (m_ui_info.index != p_hk_exit_pin_cfg->press_cnt)
+    {
+        lv_obj_add_style(btn[m_ui_info.index], LV_BTN_PART_MAIN, &style_rel);
+
+        m_ui_info.index = p_hk_exit_pin_cfg->press_cnt;
+        lv_obj_add_style(btn[m_ui_info.index], LV_BTN_PART_MAIN, &style_pre);
+    }
+
+    if (p_hk_exit_pin_cfg1->press_cnt == 1)         // 进入子菜单
+    {
+        if (!submenu)
+        {
+            p_sub_menu[m_ui_info.index]();
+        }
+    }
+    else if (p_hk_exit_pin_cfg1->press_cnt == 2)   // 退出子菜单
+    {
+        p_hk_exit_pin_cfg1->press_cnt = 0;
+
+        lv_obj_del(submenu);
+        lv_obj_del(sublabel);
+    }
 }

@@ -11,6 +11,9 @@
 #include "exit.h"
 
 extern exit_object_t g_exit0_obj;
+extern exit_object_t g_exit1_obj;
+extern exit_object_t g_exit13_obj;
+
 extern usart_object_t g_usart_object;
 extern gpio_object_t g_led_obj;
 extern systick_object_t g_systick_obj;
