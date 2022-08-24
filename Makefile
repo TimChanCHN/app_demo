@@ -51,6 +51,7 @@ $(SDK_DIR)/platform/hk/HK32F103/STD_LIB/src/stm32f10x_usart.c	\
 $(SDK_DIR)/platform/hk/HK32F103/STD_LIB/src/stm32f10x_fsmc.c	\
 $(SDK_DIR)/platform/hk/HK32F103/STD_LIB/src/stm32f10x_sdio.c	\
 $(SDK_DIR)/platform/hk/HK32F103/STD_LIB/src/stm32f10x_dma.c	\
+$(SDK_DIR)/platform/hk/HK32F103/STD_LIB/src/stm32f10x_exti.c	\
 
 #APP
 SRC_APP = \
@@ -100,6 +101,7 @@ $(SDK_DIR)/customized/hk_lib/f1/timer	\
 $(SDK_DIR)/customized/hk_lib/f1/fsmc	\
 $(SDK_DIR)/customized/hk_lib/f1/i2c		\
 $(SDK_DIR)/customized/hk_lib/f1/sdio	\
+$(SDK_DIR)/customized/hk_lib/f1/exit	\
 
 #driver
 SRC_DRIVERS = \
@@ -193,6 +195,7 @@ INC_CUSTOMIZE = \
 -I$(SDK_DIR)/customized/hal/i2c	\
 -I$(SDK_DIR)/customized/hal/touch	\
 -I$(SDK_DIR)/customized/hal/sdio	\
+-I$(SDK_DIR)/customized/hal/exit	\
 -I$(SDK_DIR)/customized/hk_lib/f1/sys	\
 -I$(SDK_DIR)/customized/hk_lib/f1/usart	\
 -I$(SDK_DIR)/customized/hk_lib/f1/gpio	\
@@ -201,6 +204,7 @@ INC_CUSTOMIZE = \
 -I$(SDK_DIR)/customized/hk_lib/f1/fsmc	\
 -I$(SDK_DIR)/customized/hk_lib/f1/i2c	\
 -I$(SDK_DIR)/customized/hk_lib/f1/sdio	\
+-I$(SDK_DIR)/customized/hk_lib/f1/exit	\
 
 INC_DRIVER = \
 -I$(SDK_DIR)/drivers/tftlcd/st7789 \

@@ -7,18 +7,28 @@
 #include "hk_gpio.h"
 #include "timer.h"
 #include "i2c.h"
+#include "exit.h"
 
 #include "hk_usart.h"
 #include "hk_i2c.h"
 #include "hk_timer.h"
 #include "hk_systick.h"
 #include "hk_sdio.h"
+#include "hk_exit.h"
 
 #include "gt9147.h"
 #include "st7789_8080.h"
 #include "nt35510_fsmc.h"
 
 #include "hk_peripheral.h"
+
+gpio_ops_t g_gpio_ops = {
+            .gpio_init = hk_gpio_obj_init,
+            .gpio_output_set = hk_gpio_obj_out_set,
+            .gpio_input_get = hk_gpio_obj_in_get,
+            .gpio_fix_input = hk_gpio_fix_input,
+            .gpio_fix_output = hk_gpio_fix_output,
+};
 
 // systick设置
 systick_object_t g_systick_obj = {
@@ -129,6 +139,61 @@ timer_object_t g_timer3_object = {
         .timer_irq_disable = hk_timer3_irq_disable,
     }
 };
+
+// PA0
+
+gpio_object_t g_key0_obj = {
+    .gpio_cfg = {
+        .gpio_clk = RCC_APB2Periph_GPIOA,
+        .p_port = (void *)GPIOA,
+        .gpio_pin = GPIO_Pin_0,
+        .gpio_dir = GPIO_DIR_INPUT,
+        .flag = GPIO_TYPE_IO,
+        .mode = GPIO_Mode_IPU,
+    },
+
+    .gpio_ops = {
+        .gpio_init          = hk_gpio_obj_init,
+        .gpio_output_set    = hk_gpio_obj_out_set,
+        .gpio_fix_input     = hk_gpio_fix_input,
+        .gpio_fix_output    = hk_gpio_fix_output,
+        .gpio_input_get     = hk_gpio_obj_in_get,
+    },
+};
+
+hk_exit_pin_cfg g_exit0_pin_cfg = {
+    .exit_gpio_cfg          = &g_key0_obj,
+    .exit_clk               = RCC_APB2Periph_AFIO,
+    .exit_pin_port_source   = GPIO_PortSourceGPIOA,
+    .exit_pin_source        = GPIO_PinSource0,
+};
+
+hk_exit_cfg g_exit0_cfg = {
+    .exit_mode      = EXTI_Mode_Interrupt,
+    .exit_trigger   = EXTI_Trigger_Rising,
+    // .exit_line_cmd  = ,
+    .exit_line      = EXTI_Line0,
+    .exit_irqn      = EXTI0_IRQn,
+    .exit_pre_prio  = 0x02,
+    .exit_sub_prio  = 0x01,
+};
+
+exit_object_t g_exit0_obj = {
+    .exit_cfg = {
+        .p_pin_cfg  = (void *)&g_exit0_pin_cfg,
+        .p_exit_cfg = (void *)&g_exit0_cfg,
+        .delay_ms   = hk_delay_ms,
+    },
+    .exit_ops = {
+        .exit_init      =   hk_exit_init,
+        .exit_enable    =   hk_exit_enable,
+        .exit_disable   =   hk_exit_disable,
+        .exit_irq_cb    =   exit0_irq_handler,
+    }
+};
+
+
+
 
 /* ST7789 */
 st7789_8080_info_t g_st7789_info = {

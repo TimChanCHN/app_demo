@@ -25,18 +25,59 @@ void main_menu(void)
     uint8_t buf1[] = "helloworld!";
     uint8_t buf2[20];
 
-    uint8_t ch = 'a';
-    uint8_t ch1;
+    uint8_t i = 0;
 
-    eeprom_write_reg(&eeprom_obj, 0x00, &ch, 1);
-    eeprom_read_reg(&eeprom_obj, 0x00, &ch1, 1);
-    trace_info("ch = %c\r\n", ch1);
-    // trace_info("buf2:%s\r\n", buf2);
+    #if 0
+    trace_info("buf1:%s, strlen(buf1)=%d\r\n", buf1, strlen(buf1));
 
-    // eeprom_write_reg(&eeprom_obj, 0x00, (uint8_t *)&m_ui_info, sizeof(lv_ui_info_t));
+    for (i = 0; i < strlen(buf1); i++)
+    {
+        eeprom_write_reg(&eeprom_obj, i, &buf1[i], 1);
+    }
+    eeprom_obj.i2c_ops.delay_ms(2);
+    for (i = 0; i < strlen(buf1); i++)
+    {
+        eeprom_read_reg(&eeprom_obj, i, &buf2[i], 1);
+    }
+    // eeprom_write_n_bytes(&eeprom_obj, 0x00, buf1, strlen(buf1));
+    // eeprom_read_n_bytes(&eeprom_obj, 0x00, buf2, strlen(buf1));
 
-    // lv_ui_info_t ui_info;
-    // eeprom_read_reg(&eeprom_obj, 0x00, (uint8_t *)&ui_info, sizeof(lv_ui_info_t));
+    // buf2[i] = '\0';
+    // eeprom_write_reg(&eeprom_obj, 0x0a, buf1, (strlen(buf1)));
+    // eeprom_obj.i2c_ops.delay_ms(2);
+    // eeprom_read_reg(&eeprom_obj, 0x0a, buf2, (strlen(buf1)));
+    trace_info("buf2:%s\r\n", buf2);
+    #endif
+
+    #if 0
+    trace_info("sizeof lv_ui_info_t %d\r\n", sizeof(lv_ui_info_t));
+
+    uint8_t *buf = (uint8_t *)&m_ui_info;
+
+    for (i = 0; i < sizeof(lv_ui_info_t); i++)
+    {
+        trace_info("buf[%d] = %d\r\n", i, buf[i]);
+        eeprom_write_reg(&eeprom_obj, i, buf[i], 1);
+    }
+
+    eeprom_obj.i2c_ops.delay_ms(2);
+    lv_ui_info_t ui_info;
+
+    uint8_t buf1[4];
+
+    // buf1 = (uint8_t *)malloc(sizeof(lv_ui_info_t));
+    for (i = 0; i < sizeof(lv_ui_info_t); i++)
+    {
+        eeprom_read_reg(&eeprom_obj, i, buf1[i], 1);
+        trace_info("buf1[%d] = %d\r\n", i, buf1[i]);
+    }
+    ui_info = *((lv_ui_info_t *)buf1);
+
+    trace_info("ui_info : person : %d\r\n",     ui_info.person);
+    trace_info("ui_info : vol_input : %d\r\n",  ui_info.vol_input);
+    trace_info("ui_info : vol_output : %d\r\n", ui_info.vol_output);
+    trace_info("ui_info : index : %d\r\n",      ui_info.index);
+    #endif
 
     // 2. show ui
     lv_style_init(&style_rel);
@@ -61,7 +102,6 @@ void main_menu(void)
     lv_obj_t * label0 = lv_label_create(botton, NULL);      
     lv_label_set_text(label0, "菜单");      
 
-    uint8_t i = 0;
     for (i = 0; i < 5; i++)
     {
         btn[i] = lv_btn_create(lv_scr_act(), NULL);    
