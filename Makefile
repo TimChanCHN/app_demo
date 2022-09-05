@@ -110,6 +110,7 @@ $(SDK_DIR)/drivers/tftlcd/nt35510		\
 $(SDK_DIR)/drivers/tftlcd/ili9341		\
 $(SDK_DIR)/drivers/touch				\
 $(SDK_DIR)/drivers/eeprom				\
+$(SDK_DIR)/drivers/encoder				\
 
 SRC_EXTERNAL = \
 $(SDK_DIR)/external/fatfs/src		\
@@ -212,6 +213,7 @@ INC_DRIVER = \
 -I$(SDK_DIR)/drivers/tftlcd/ili9341		\
 -I$(SDK_DIR)/drivers/touch		\
 -I$(SDK_DIR)/drivers/eeprom		\
+-I$(SDK_DIR)/drivers/encoder				\
 
 INC_EXTERNAL = \
 -I$(SDK_DIR)/external/fatfs/src	\

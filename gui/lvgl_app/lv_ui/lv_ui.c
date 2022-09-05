@@ -21,16 +21,53 @@ static sub_menu_handler p_sub_menu[5];
 
 LV_FONT_DECLARE(fontCHN12);
 
+void set_mode(void)
+{
+    static uint8_t i = 0;
+    if (i % 2 == 0)
+    {
+        lv_label_set_text(label[0], "模式:后进后出");
+    }
+    else
+    {
+        lv_label_set_text(label[0], "模式:先进先出");
+    }
+}
+
 void set_statement_person(void)
 {
     submenu = lv_btn_create(lv_scr_act(), NULL);    
     // lv_obj_set_pos(submenu, 0, (i+1)*80);                           
-    lv_obj_set_size(submenu, LV_HOR_RES_MAX/2, LV_VER_RES_MAX/2);                        
+    lv_obj_set_size(submenu, LV_HOR_RES_MAX/4, LV_VER_RES_MAX/4);                        
     lv_obj_align_mid(submenu, lv_scr_act(), LV_ALIGN_CENTER, 0, 0);
     lv_obj_add_style(submenu, LV_BTN_PART_MAIN, &style_rel);
 
     sublabel = lv_label_create(submenu, NULL);   
-    lv_label_set_text_fmt(sublabel, "请输入发言人数:[%d]", m_ui_info.person);
+    lv_label_set_text_fmt(sublabel, "请输入:[%d]", m_ui_info.person);
+}
+
+void set_input_voice(void)
+{
+    submenu = lv_btn_create(lv_scr_act(), NULL);    
+    // lv_obj_set_pos(submenu, 0, (i+1)*80);                           
+    lv_obj_set_size(submenu, LV_HOR_RES_MAX/4, LV_VER_RES_MAX/4);                        
+    lv_obj_align_mid(submenu, lv_scr_act(), LV_ALIGN_CENTER, 0, 0);
+    lv_obj_add_style(submenu, LV_BTN_PART_MAIN, &style_rel);
+
+    sublabel = lv_label_create(submenu, NULL);   
+    lv_label_set_text_fmt(sublabel, "输入音量:[%d]", m_ui_info.vol_input);
+}
+
+void set_output_voice(void)
+{
+    submenu = lv_btn_create(lv_scr_act(), NULL);    
+    // lv_obj_set_pos(submenu, 0, (i+1)*80);                           
+    lv_obj_set_size(submenu, LV_HOR_RES_MAX/4, LV_VER_RES_MAX/4);                        
+    lv_obj_align_mid(submenu, lv_scr_act(), LV_ALIGN_CENTER, 0, 0);
+    lv_obj_add_style(submenu, LV_BTN_PART_MAIN, &style_rel);
+
+    sublabel = lv_label_create(submenu, NULL);   
+    lv_label_set_text_fmt(sublabel, "输出音量:[%d]", m_ui_info.vol_output);
 }
 
 void main_menu(void)
@@ -116,7 +153,7 @@ void main_menu(void)
     // 菜单
     lv_obj_t * botton = lv_btn_create(lv_scr_act(), NULL);  
     lv_obj_set_pos(botton, 0, 0);                           
-    lv_obj_set_size(botton, LV_HOR_RES_MAX, 80);            
+    lv_obj_set_size(botton, LV_HOR_RES_MAX, 40);            
     lv_obj_add_style(botton, LV_BTN_PART_MAIN, &style_rel);           
 
     lv_obj_t * label0 = lv_label_create(botton, NULL);      
@@ -125,8 +162,8 @@ void main_menu(void)
     for (i = 0; i < 5; i++)
     {
         btn[i] = lv_btn_create(lv_scr_act(), NULL);    
-        lv_obj_set_pos(btn[i], 0, (i+1)*80);                           
-        lv_obj_set_size(btn[i], LV_HOR_RES_MAX, 80);                        
+        lv_obj_set_pos(btn[i], 0, (i+1)*40);                           
+        lv_obj_set_size(btn[i], LV_HOR_RES_MAX, 40);                        
         lv_obj_add_style(btn[i], LV_BTN_PART_MAIN, &style_rel);
         // lv_obj_set_event_cb(btn[i], btn_event_cb);                 
 
@@ -142,7 +179,10 @@ void main_menu(void)
     lv_obj_add_style(btn[m_ui_info.index], LV_BTN_PART_MAIN, &style_pre);
 
     // init sub_menu_list
+    p_sub_menu[0] = set_mode;
     p_sub_menu[1] = set_statement_person;
+    p_sub_menu[2] = set_input_voice;
+    p_sub_menu[3] = set_output_voice;
 }
 
 void scan_menu(void)
@@ -165,16 +205,25 @@ void scan_menu(void)
 
     if (p_hk_exit_pin_cfg1->press_cnt == 1)         // 进入子菜单
     {
+        trace_info("key 1 = %d\r\n", p_hk_exit_pin_cfg1->press_cnt);
         if (!submenu)
         {
+            trace_info("submenu is empty\r\n");
             p_sub_menu[m_ui_info.index]();
+        }
+        else
+        {
+            trace_info("submenu is not empty\r\n");
         }
     }
     else if (p_hk_exit_pin_cfg1->press_cnt == 2)   // 退出子菜单
     {
+        trace_info("key 1 = %d\r\n", p_hk_exit_pin_cfg1->press_cnt);
         p_hk_exit_pin_cfg1->press_cnt = 0;
 
         lv_obj_del(submenu);
         lv_obj_del(sublabel);
+        free(submenu);
+        submenu = NULL;
     }
 }

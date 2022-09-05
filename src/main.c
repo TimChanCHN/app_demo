@@ -53,15 +53,18 @@ void test_timer_handler(void *p_data)
 {
     static bool is_led_off = false;
 
-    // hk_exit_pin_cfg *p_hk_exit_pin_cfg = (hk_exit_pin_cfg *)g_exit13_obj.exit_cfg.p_pin_cfg;
-    // gpio_object_t *p_exit_gpio = p_hk_exit_pin_cfg->exit_gpio_cfg;
-	// uint8_t keyval = 0;
-
-	// p_exit_gpio->gpio_ops.gpio_input_get(&p_exit_gpio->gpio_cfg, &keyval);
-	// if (keyval == 0)
-	// {
-	// 	trace_info("key3 is pressed.\r\n");
-	// }
+	if (g_encoder_obj.dir) 
+	{
+		if (g_encoder_obj.dir == 1)
+		{
+			trace_info("zheng zhuan\r\n");
+		}
+		else if (g_encoder_obj.dir == 2)
+		{
+			trace_info("fan zhuan\r\n");
+		}
+		g_encoder_obj.dir = 0;
+	}
 
 	scan_menu();
 
@@ -92,10 +95,6 @@ int main(void)
 	letter_shell_init();
 	cm_backtrace_init("app", HARDWARE_VERSION, SOFTWARE_VERSION);
 
-	g_exit0_obj.exit_ops.exit_init(&g_exit0_obj.exit_cfg);
-	g_exit1_obj.exit_ops.exit_init(&g_exit1_obj.exit_cfg);
-	g_exit13_obj.exit_ops.exit_init(&g_exit13_obj.exit_cfg);
-
 	TIMER_INIT(&g_timer3_object);
 	TIMER_CREATE(&m_test_timer, false, false, test_timer_handler);
 	TIMER_START(m_test_timer, 500);
@@ -107,7 +106,10 @@ int main(void)
 	}
 	trace_info("eeprom:24c02 is ok.\r\n");
 
+	encoder_init(&g_encoder_obj);
+
 	// lvgl设置
+	#if 1
 	lv_init();
 	lv_port_disp_init();
 	lv_port_indev_init();
@@ -117,9 +119,18 @@ int main(void)
 	trace_debug("debug\r\n");
 
 	// lv_ex_get_started_3();
+	// monitor heap_stack
+	extern unsigned int _user_heap_stack_start;
+	extern unsigned int _user_heap_stack_end;
+	unsigned int start_value, end_value;
+	start_value = (unsigned int)&_user_heap_stack_start;
+	end_value = (unsigned int)&_user_heap_stack_end;
+	trace_info("user heap stack start : 0x%x\r\n", start_value);
+	trace_info("user heap stack end   : 0x%x\r\n", end_value);
 
 
-	main_menu();
+	main_menu();   
+	#endif
 
 	while (1)
 	{

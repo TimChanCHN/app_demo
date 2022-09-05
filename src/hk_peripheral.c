@@ -18,6 +18,7 @@
 
 #include "gt9147.h"
 #include "st7789_8080.h"
+#include "st7789_fsmc.h"
 #include "nt35510_fsmc.h"
 
 #include "hk_peripheral.h"
@@ -213,7 +214,7 @@ hk_exit_cfg g_exit1_cfg = {
     .exit_line      = EXTI_Line1,
     .exit_irqn      = EXTI1_IRQn,
     .exit_pre_prio  = 0x02,
-    .exit_sub_prio  = 0x02,
+    .exit_sub_prio  = 0x03,
 };
 
 exit_object_t g_exit1_obj = {
@@ -231,7 +232,7 @@ exit_object_t g_exit1_obj = {
 };
 
 // PC13
-/********************  key3 & exit1  ********************/
+/********************  key3 & exit13  ********************/
 gpio_object_t g_key3_obj = {
     .gpio_cfg = {
         .gpio_clk = KEY3_PORT_PERIPH_CLK,
@@ -265,7 +266,7 @@ hk_exit_cfg g_exit13_cfg = {
     .exit_line      = EXTI_Line13,
     .exit_irqn      = EXTI15_10_IRQn,
     .exit_pre_prio  = 0x02,
-    .exit_sub_prio  = 0x03,
+    .exit_sub_prio  = 0x04,
 };
 
 exit_object_t g_exit13_obj = {
@@ -414,6 +415,103 @@ tftlcd_object_t g_tftlcd_obj = {
     },
 };
 
+/********************  st7789 fsmc  ********************/
+//RST--PE1
+
+//CS--PD7
+//RD--PD4
+//WR--PD5
+//RS--PD11
+//DB0-DB7 --> PD14,PD15,PD0,PD1,PE7,PE8,PE9,PE10
+st7789_fsmc_info_t g_st7789 = {
+    .rst_pin = {
+        .gpio_cfg = {
+            .gpio_clk = LCD_RST1_PORT_PERIPH_CLK,
+            .p_port = (void *)LCD_RST1_PORT,
+            .gpio_pin = LCD_RST1_PIN,
+            .gpio_dir = GPIO_DIR_OUTPUR,
+            .flag = GPIO_TYPE_IO,
+        },
+        .gpio_ops = {
+            .gpio_init = hk_gpio_obj_init,
+            .gpio_output_set = hk_gpio_obj_out_set,
+        },
+    },
+    .fsmc_pin1 = {
+        .gpio_cfg = {
+            .gpio_clk = LCD_FSMC1_PORT_PERIPH_CLK,
+            .p_port = (void *)LCD_FSMC1_PORT,
+            .gpio_pin = (GPIO_Pin_0|GPIO_Pin_1|GPIO_Pin_4|GPIO_Pin_5|GPIO_Pin_7|GPIO_Pin_11|GPIO_Pin_14|GPIO_Pin_15),
+            .flag = GPIO_TYPE_AF,
+        },
+
+        .gpio_ops = {
+            .gpio_init = hk_gpio_obj_init,
+        },
+    },
+    .fsmc_pin2 = {
+        .gpio_cfg = {
+            .gpio_clk = LCD_FSMC2_PORT_PERIPH_CLK,
+            .p_port = (void *)LCD_FSMC2_PORT,
+            .gpio_pin = (GPIO_Pin_7|GPIO_Pin_8|GPIO_Pin_9|GPIO_Pin_10),
+            .flag = GPIO_TYPE_AF,
+        },
+
+        .gpio_ops = {
+            .gpio_init = hk_gpio_obj_init,
+        },
+    },
+    .base_addr = ((uint32_t)((FSMC_BASE_ADDR + BANK1_SECTOR1_OFFSET) | BANK_8B_A16_OFFSET)),
+    .buswidth = LCDBUSWIDTH_8B,
+};
+
+tftlcd_driver_t g_lcd7789_driver = {
+    .p_tft_cfg = (void *)&g_st7789,
+    .lcd_info = {
+        .setxcmd = 0x2A,
+        .setycmd = 0x2B,
+        .wramcmd = 0x2C,
+        .width = 320,
+        .height = 240,
+        .id = 0,
+        .dir = 0,
+        .background_color = RED,
+        .point_color = BLUE,
+    },
+};
+
+tftlcd_object_t g_tftlcd7789_obj = {
+    .tftlcd_cfg = {
+        .p_dri = &g_lcd7789_driver,
+
+        .hardware_init  = st7789_hw_fsmc_init,
+        .write_cmd      = st7789_write_cmd_fsmc, 
+        .write_data     = st7789_write_data_fsmc, 
+        .read_data      = st7789_read_data_fsmc,
+        .write_reg      = st7789_write_reg_fsmc,
+        .delay_ms       = hk_delay_ms, 
+        .delay_us       = hk_delay_us,
+
+    },
+    .tftlcd_ops = {
+        // 私有函数
+        // .read_reg       = nt35510_read_reg,
+        .init           = st7789_init,
+        .set_cursor     = st7789_set_cursor,
+        .write_ram_pre  = st7789_write_ram_pre,
+        .write_ram      = st7789_write_ram,
+        .set_scan_dir   = st7789_set_scan_dir,
+
+        // 公有函数
+        .clear_screen   = st7789_clear_screen,
+
+        .fill_area_color = tftlcd_fill_area_color,
+        .fill_area      = tftlcd_fill_area,
+        .draw_point     = tftlcd_draw_point,
+        .show_char      = tftlcd_show_char,
+    },
+};
+
 /********************  nt35510  ********************/
 nt35510_fsmc_info_t g_nt35510 = {
     .rst_pin = {
@@ -481,7 +579,7 @@ tftlcd_driver_t g_lcd35510_driver = {
         .width = 480,
         .height = 800,
         .id = 0,
-        .dir = 0,
+        .dir = 1,               // 1:横屏， 0:竖屏
         .background_color = RED,
         .point_color = BLUE,
     },
@@ -511,6 +609,7 @@ tftlcd_object_t g_tftlcd3510_obj = {
 
         // 公有函数
         .clear_screen   = tftlcd_clear_screen,
+        .fill_area_color = nt35510_fill_color,
         .fill_area      = tftlcd_fill_area,
         .draw_point     = tftlcd_draw_point,
         .show_char      = tftlcd_show_char,
@@ -518,7 +617,7 @@ tftlcd_object_t g_tftlcd3510_obj = {
 };
 
 
-tftlcd_object_t *g_tftlcd_lvgl_obj = &g_tftlcd3510_obj;
+tftlcd_object_t *g_tftlcd_lvgl_obj = &g_tftlcd7789_obj;
 
 /********************  touch setting:9147  ********************/
 tp_dev_t g_tp_dev = {
@@ -727,3 +826,131 @@ sdio_obj_t g_sdio_obj = {
     },
 };
 
+/********************  ENCODER  ********************/
+// encoder sw
+gpio_object_t g_enc_sw = {
+    .gpio_cfg = {
+        .gpio_clk = ENCODER_SW_PORT_PERIPH_CLK,
+        .p_port = (void *)ENCODER_SW_PORT,
+        .gpio_pin = ENCODER_SW_PIN,
+        .gpio_dir = GPIO_DIR_INPUT,
+        .flag = GPIO_TYPE_IO,
+        .mode = GPIO_Mode_IPU,
+    },
+
+    .gpio_ops = {
+        .gpio_init          = hk_gpio_obj_init,
+        .gpio_output_set    = hk_gpio_obj_out_set,
+        .gpio_fix_input     = hk_gpio_fix_input,
+        .gpio_fix_output    = hk_gpio_fix_output,
+        .gpio_input_get     = hk_gpio_obj_in_get,
+    },
+};
+
+hk_exit_pin_cfg g_exit3_encsw_pin_cfg = {
+    .exit_gpio_cfg          = &g_enc_sw,
+    .exit_clk               = RCC_APB2Periph_AFIO,
+    .exit_pin_port_source   = GPIO_PortSourceGPIOC,
+    .exit_pin_source        = GPIO_PinSource3,
+};
+
+hk_exit_cfg g_exit3_encsw_cfg = {
+    .exit_mode      = EXTI_Mode_Interrupt,
+    .exit_trigger   = EXTI_Trigger_Rising,
+    // .exit_line_cmd  = ,
+    .exit_line      = EXTI_Line3,
+    .exit_irqn      = EXTI3_IRQn,
+    .exit_pre_prio  = 0x01,
+    .exit_sub_prio  = 0x02,
+};
+
+exit_object_t g_exit3_obj = {
+    .exit_cfg = {
+        .p_pin_cfg  = (void *)&g_exit3_encsw_pin_cfg,
+        .p_exit_cfg = (void *)&g_exit3_encsw_cfg,
+        .delay_ms   = hk_delay_ms,
+    },
+    .exit_ops = {
+        .exit_init      =   hk_exit_init,
+        .exit_enable    =   hk_exit_enable,
+        .exit_disable   =   hk_exit_disable,
+        .exit_irq_cb    =   encoder_sw_handler,
+    }
+};
+
+// encoder exit pin
+gpio_object_t g_enc_exit = {
+    .gpio_cfg = {
+        .gpio_clk = ENCODER_PA_PORT_PERIPH_CLK,
+        .p_port = (void *)ENCODER_PA_PORT,
+        .gpio_pin = ENCODER_PA_PIN,
+        .gpio_dir = GPIO_DIR_INPUT,
+        .flag = GPIO_TYPE_IO,
+        .mode = GPIO_Mode_IPU,
+    },
+
+    .gpio_ops = {
+        .gpio_init          = hk_gpio_obj_init,
+        .gpio_output_set    = hk_gpio_obj_out_set,
+        .gpio_fix_input     = hk_gpio_fix_input,
+        .gpio_fix_output    = hk_gpio_fix_output,
+        .gpio_input_get     = hk_gpio_obj_in_get,
+    },
+};
+
+hk_exit_pin_cfg g_exit4_encexit_pin_cfg = {
+    .exit_gpio_cfg          = &g_enc_exit,
+    .exit_clk               = RCC_APB2Periph_AFIO,
+    .exit_pin_port_source   = GPIO_PortSourceGPIOC,
+    .exit_pin_source        = GPIO_PinSource4,
+};
+
+hk_exit_cfg g_exit4_encexit_cfg = {
+    .exit_mode      = EXTI_Mode_Interrupt,
+    .exit_trigger   = EXTI_Trigger_Rising_Falling,
+    // .exit_line_cmd  = ,
+    .exit_line      = EXTI_Line4,
+    .exit_irqn      = EXTI4_IRQn,
+    .exit_pre_prio  = 0x01,
+    .exit_sub_prio  = 0x01,
+};
+
+exit_object_t g_exit4_obj = {
+    .exit_cfg = {
+        .p_pin_cfg  = (void *)&g_exit4_encexit_pin_cfg,
+        .p_exit_cfg = (void *)&g_exit4_encexit_cfg,
+        .delay_ms   = hk_delay_ms,
+    },
+    .exit_ops = {
+        .exit_init      =   hk_exit_init,
+        .exit_enable    =   hk_exit_enable,
+        .exit_disable   =   hk_exit_disable,
+        .exit_irq_cb    =   encoder_data_handler,
+    }
+};
+
+// encoder gpio
+gpio_object_t g_enc_gpio = {
+    .gpio_cfg = {
+        .gpio_clk = ENCODER_PB_PORT_PERIPH_CLK,
+        .p_port = (void *)ENCODER_PB_PORT,
+        .gpio_pin = ENCODER_PB_PIN,
+        .gpio_dir = GPIO_DIR_INPUT,
+        .flag = GPIO_TYPE_IO,
+        .mode = GPIO_Mode_IPU,
+    },
+
+    .gpio_ops = {
+        .gpio_init          = hk_gpio_obj_init,
+        .gpio_output_set    = hk_gpio_obj_out_set,
+        .gpio_fix_input     = hk_gpio_fix_input,
+        .gpio_fix_output    = hk_gpio_fix_output,
+        .gpio_input_get     = hk_gpio_obj_in_get,
+    },
+};
+
+encoder_object_t g_encoder_obj = {
+    .pin_sw     = &g_exit3_obj,
+    .pin_exit   = &g_exit4_obj,
+    .pin_gpio   = &g_enc_gpio,
+};

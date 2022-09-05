@@ -9,6 +9,8 @@
 #include "touch.h"
 #include "sdio.h"
 #include "exit.h"
+#include "encoder.h"
+
 
 extern exit_object_t g_exit0_obj;
 extern exit_object_t g_exit1_obj;
@@ -29,5 +31,6 @@ extern touch_object_t *g_touch_lvgl_obj;
 extern i2c_object_t eeprom_obj;
 
 extern sdio_obj_t g_sdio_obj;
+extern encoder_object_t g_encoder_obj;
 
 #endif

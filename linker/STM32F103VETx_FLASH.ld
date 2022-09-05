@@ -176,14 +176,15 @@ SECTIONS
   ._user_heap_stack :
   {
     . = ALIGN(8);
+    _user_heap_stack_start = .;
     PROVIDE ( end = . );
     PROVIDE ( _end = . );
     . = . + _Min_Heap_Size;
     _sstack = .;
     . = . + _Min_Stack_Size;
     . = ALIGN(8);
+    _user_heap_stack_end = .;
   } >RAM
-
   
 
   /* Remove information from the standard libraries */

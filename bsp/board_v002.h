@@ -17,6 +17,22 @@
 #define KEY3_PORT                           GPIOC
 #define KEY3_PORT_PERIPH_CLK                RCC_APB2Periph_GPIOC
 
+/* encoder */
+// SW   :PC3
+// PINA :PC4
+// PINB :PC5
+#define ENCODER_SW_PIN                      GPIO_Pin_3
+#define ENCODER_SW_PORT                     GPIOC
+#define ENCODER_SW_PORT_PERIPH_CLK          RCC_APB2Periph_GPIOC
+
+#define ENCODER_PA_PIN                      GPIO_Pin_4
+#define ENCODER_PA_PORT                     GPIOC
+#define ENCODER_PA_PORT_PERIPH_CLK          RCC_APB2Periph_GPIOC
+
+#define ENCODER_PB_PIN                      GPIO_Pin_5
+#define ENCODER_PB_PORT                     GPIOC
+#define ENCODER_PB_PORT_PERIPH_CLK          RCC_APB2Periph_GPIOC
+
 /* UART */
 #define TRACE_UART                          USART1
 #define TRACE_UART_CLK                      RCC_APB2Periph_USART1
