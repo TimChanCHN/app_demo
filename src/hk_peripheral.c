@@ -15,6 +15,7 @@
 #include "hk_systick.h"
 #include "hk_sdio.h"
 #include "hk_exit.h"
+#include "hk_flash.h"
 
 #include "gt9147.h"
 #include "st7789_8080.h"
@@ -175,7 +176,7 @@ exit_object_t g_exit0_obj = {
         .exit_init      =   hk_exit_init,
         .exit_enable    =   hk_exit_enable,
         .exit_disable   =   hk_exit_disable,
-        .exit_irq_cb    =   exit0_irq_handler,
+        .exit_irq_cb    =   exit_irq_handler,
     }
 };
 
@@ -227,7 +228,7 @@ exit_object_t g_exit1_obj = {
         .exit_init      =   hk_exit_init,
         .exit_enable    =   hk_exit_enable,
         .exit_disable   =   hk_exit_disable,
-        .exit_irq_cb    =   exit1_irq_handler,
+        .exit_irq_cb    =   exit_irq_handler,
     }
 };
 
@@ -279,7 +280,7 @@ exit_object_t g_exit13_obj = {
         .exit_init      =   hk_exit_init,
         .exit_enable    =   hk_exit_enable,
         .exit_disable   =   hk_exit_disable,
-        .exit_irq_cb    =   exit13_irq_handler,
+        .exit_irq_cb    =   exit_irq_handler,
     }
 };
 
@@ -953,4 +954,18 @@ encoder_object_t g_encoder_obj = {
     .pin_sw     = &g_exit3_obj,
     .pin_exit   = &g_exit4_obj,
     .pin_gpio   = &g_enc_gpio,
+};
+
+/********************  FLASH  ********************/
+flash_object_t g_flash_obj = {
+    .flash_cfg = {
+        .flash_start_addr   = 0x0807F800,
+        .flash_page_size    = 0x800,
+        .flash_offset       = 0,
+        .flash_max_size     = 0x800,
+    },
+    .flash_ops = {
+        .flash_write    = hk_flash_write ,
+        .flash_read     = hk_flash_read,
+    },
 };

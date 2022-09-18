@@ -53,22 +53,8 @@ void test_timer_handler(void *p_data)
 {
     static bool is_led_off = false;
 
-	if (g_encoder_obj.dir) 
-	{
-		if (g_encoder_obj.dir == 1)
-		{
-			trace_info("zheng zhuan\r\n");
-		}
-		else if (g_encoder_obj.dir == 2)
-		{
-			trace_info("fan zhuan\r\n");
-		}
-		g_encoder_obj.dir = 0;
-	}
+	menu_status_handler();
 
-	scan_menu();
-
-	
     if(is_led_off)
     {
         g_led_obj.gpio_ops.gpio_output_set(&g_led_obj.gpio_cfg, is_led_off);
@@ -89,7 +75,6 @@ int main(void)
 	g_led_obj.gpio_ops.gpio_init(&g_led_obj.gpio_cfg);
 	g_led_obj.gpio_ops.gpio_output_set(&g_led_obj.gpio_cfg, 1);
 
-	eeprom_init(&eeprom_obj);
 
 	trace_init();
 	letter_shell_init();
@@ -97,14 +82,16 @@ int main(void)
 
 	TIMER_INIT(&g_timer3_object);
 	TIMER_CREATE(&m_test_timer, false, false, test_timer_handler);
-	TIMER_START(m_test_timer, 500);
+	TIMER_START(m_test_timer, 200);
 
+	eeprom_init(&eeprom_obj);
 	while (eeprom_check(&eeprom_obj))
 	{
 		trace_info("eeprom init fail.\r\n");
 		trace_info("keep checking\r\n");
 	}
 	trace_info("eeprom:24c02 is ok.\r\n");
+	read_data_from_mem();
 
 	encoder_init(&g_encoder_obj);
 
@@ -112,13 +99,12 @@ int main(void)
 	#if 1
 	lv_init();
 	lv_port_disp_init();
-	lv_port_indev_init();
+	// lv_port_indev_init();
 	lv_port_fs_init();
 
 	trace_info("loop\r\n");
 	trace_debug("debug\r\n");
 
-	// lv_ex_get_started_3();
 	// monitor heap_stack
 	extern unsigned int _user_heap_stack_start;
 	extern unsigned int _user_heap_stack_end;
@@ -128,7 +114,7 @@ int main(void)
 	trace_info("user heap stack start : 0x%x\r\n", start_value);
 	trace_info("user heap stack end   : 0x%x\r\n", end_value);
 
-
+	// ui 
 	main_menu();   
 	#endif
 
