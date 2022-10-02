@@ -8,7 +8,7 @@
 #include "timer.h"
 #include "hk_timer.h"
 #include "hk_systick.h"
-#include "fsmc.h"
+#include "hk_fsmc.h"
 #include "st7789_8080.h"
 #include "nt35510_fsmc.h"
 

@@ -2,7 +2,7 @@
 
 
 #include "usart.h"
-#include "fsmc.h"
+#include "hk_fsmc.h"
 #include "gpio.h"
 #include "hk_gpio.h"
 #include "timer.h"

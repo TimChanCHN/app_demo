@@ -11,6 +11,7 @@
 #include "exit.h"
 #include "encoder.h"
 #include "flash.h"
+#include "dma.h"
 
 extern exit_object_t g_exit0_obj;
 extern exit_object_t g_exit1_obj;
@@ -34,5 +35,7 @@ extern sdio_obj_t g_sdio_obj;
 extern encoder_object_t g_encoder_obj;
 
 extern flash_object_t g_flash_obj;
+
+extern dma_object_t g_dma_obj;
 
 #endif

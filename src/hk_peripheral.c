@@ -1,14 +1,9 @@
 #include "boards.h"
 
-
-#include "usart.h"
-#include "fsmc.h"
-#include "gpio.h"
-#include "hk_gpio.h"
-#include "timer.h"
 #include "i2c.h"
-#include "exit.h"
 
+#include "hk_gpio.h"
+#include "hk_fsmc.h"
 #include "hk_usart.h"
 #include "hk_i2c.h"
 #include "hk_timer.h"
@@ -16,6 +11,7 @@
 #include "hk_sdio.h"
 #include "hk_exit.h"
 #include "hk_flash.h"
+#include "hk_dma.h"
 
 #include "gt9147.h"
 #include "st7789_8080.h"
@@ -780,6 +776,33 @@ i2c_object_t eeprom_obj = {
 };
 
 /********************  sdio  ********************/
+// sdio dma
+// DMA_DIR_PeripheralDST ,MEM 2 PER;
+// DMA_DIR_PeripheralSRC ,PER 2 MEM;
+DMA_InitTypeDef dma_cfg = {
+	.DMA_DIR 					= DMA_DIR_PeripheralDST,  		//数据传输方向，从内存读取发送到外设
+	.DMA_BufferSize 			= 512 / 4,  			    //DMA通道的DMA缓存的大小
+	.DMA_PeripheralInc 		    = DMA_PeripheralInc_Disable,  	//外设地址寄存器不变
+	.DMA_MemoryInc 			    = DMA_MemoryInc_Enable,			//内存地址寄存器递增
+	.DMA_PeripheralDataSize 	= DMA_PeripheralDataSize_Word,  //数据宽度为32位
+	.DMA_MemoryDataSize 		= DMA_MemoryDataSize_Word, 		//数据宽度为32位
+	.DMA_Mode 					= DMA_Mode_Normal,  			//工作在正常缓存模式
+	.DMA_Priority 				= DMA_Priority_High, 			//DMA通道 x拥有高优先级 
+	.DMA_M2M 					= DMA_M2M_Disable,  			//DMA通道x没有设置为内存到内存传输
+};
+
+dma_object_t g_sdio_dma = {
+    .dma_cfg = {
+        .dma_clk = RCC_AHBPeriph_DMA2,
+        .dma_param = (void *)&dma_cfg,
+        .channel = DMA2_Channel4,
+    },
+    .dma_ops = {
+        .dma_init = hk_dma_obj_init,
+        .dma_transfer_ctrl = hk_dma_transfer_ctrl,
+    },
+};
+
 hk_sdio_hw_cfg_t g_sdio_hw_cfg = {
     .sd_gpio1   = {
         .gpio_cfg = {
@@ -812,6 +835,7 @@ sd_card_info_t g_card_info = {
 
 sdio_obj_t g_sdio_obj = {
     .sdio_cfg = {
+        .dma_obj        = &g_sdio_dma,
         .cardinfo       = &g_card_info,
         .devicemode     = SD_DMA_MODE,
         .stopcondition  = 0,
@@ -969,3 +993,15 @@ flash_object_t g_flash_obj = {
         .flash_read     = hk_flash_read,
     },
 };
+
+/********************  DMA  ********************/
+// dma_object_t g_dma_obj = {
+//     .dma_cfg = {
+//         .dma_clk = RCC_AHBPeriph_DMA2,
+//         .channel = DMA2_Channel4,
+//     },
+//     .dma_ops = {
+//         .dma_init = hk_dma_obj_init,
+//         .dma_transfer_ctrl = hk_dma_transfer_ctrl,
+//     },
+// };

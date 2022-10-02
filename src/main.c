@@ -29,6 +29,8 @@
 #define SOFTWARE_VERSION "V0.1.0"
 
 TIMER_DEF(m_test_timer);
+
+#if 0
 LV_FONT_DECLARE(fontCHN12);
 
 void show_my_font(void)
@@ -48,6 +50,7 @@ void show_my_font(void)
     lv_label_set_text(label, "我");                     /*Set the labels text*/
 	lv_obj_add_style(label, LV_OBJ_PART_MAIN, &style_font);
 }
+#endif
 
 void test_timer_handler(void *p_data)
 {
@@ -100,7 +103,7 @@ int main(void)
 	lv_init();
 	lv_port_disp_init();
 	// lv_port_indev_init();
-	lv_port_fs_init();
+	// lv_port_fs_init();
 
 	trace_info("loop\r\n");
 	trace_debug("debug\r\n");

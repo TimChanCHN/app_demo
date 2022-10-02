@@ -1,8 +1,9 @@
 #include <stdlib.h>
 
 #include "lv_ui.h"
-#include "lvgl.h"
-
+// #include "lvgl.h"
+#include "../lvgl/lvgl.h"
+ 
 #include "24cxx.h"
 #include "hk_peripheral.h"
 #include "trace.h"
@@ -28,6 +29,7 @@ static lv_ui_info_t m_ui_info;
 static sub_menu_handler p_sub_menu[5]; 
 
 LV_FONT_DECLARE(fontCHN12);
+LV_FONT_DECLARE(myfont)
 
 void set_mode(void)
 {
@@ -154,9 +156,9 @@ void write_data_to_mem(void)
 void main_menu(void)
 {
     // 1. read param from eeprom
-    m_ui_info.person = 3;
-    m_ui_info.vol_input = 33;
-    m_ui_info.vol_output = 88;
+    // m_ui_info.person = 3;
+    // m_ui_info.vol_input = 33;
+    // m_ui_info.vol_output = 88;
     m_ui_info.index = 0;
     m_ui_info.selected = true;             // 与UI布局的“确定”按键
     m_ui_info.exit_status = 0;
@@ -173,7 +175,7 @@ void main_menu(void)
     lv_style_set_radius(&style_rel, LV_STATE_DEFAULT, 0);
     lv_style_set_bg_opa(&style_rel, LV_STATE_DEFAULT, LV_OPA_COVER);
     lv_style_set_bg_color(&style_rel, LV_STATE_DEFAULT, LV_COLOR_WHITE);
-    lv_style_set_text_font(&style_rel, LV_STATE_DEFAULT, &fontCHN12);
+    lv_style_set_text_font(&style_rel, LV_STATE_DEFAULT, &myfont);
     lv_style_set_text_color(&style_rel, LV_STATE_DEFAULT, LV_COLOR_BLACK);
 
     lv_style_init(&style_pre);

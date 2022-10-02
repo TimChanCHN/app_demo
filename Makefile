@@ -36,96 +36,30 @@ endif
 
 $(info PLATFORM: $(PLATFORM))
 
+# 文件添加在sdk.mk中实现
+include ../sdk/sdk.mk
 
 ######################################
 # source
 ######################################
 # C sources
-#标准库函数
-SRC_STD_LIB = 	\
-$(SDK_DIR)/platform/hk/HK32F103/STD_LIB/src/stm32f10x_gpio.c	\
-$(SDK_DIR)/platform/hk/HK32F103/STD_LIB/src/stm32f10x_tim.c	\
-$(SDK_DIR)/platform/hk/HK32F103/STD_LIB/src/misc.c	\
-$(SDK_DIR)/platform/hk/HK32F103/STD_LIB/src/stm32f10x_rcc.c	\
-$(SDK_DIR)/platform/hk/HK32F103/STD_LIB/src/stm32f10x_usart.c	\
-$(SDK_DIR)/platform/hk/HK32F103/STD_LIB/src/stm32f10x_fsmc.c	\
-$(SDK_DIR)/platform/hk/HK32F103/STD_LIB/src/stm32f10x_sdio.c	\
-$(SDK_DIR)/platform/hk/HK32F103/STD_LIB/src/stm32f10x_dma.c	\
-$(SDK_DIR)/platform/hk/HK32F103/STD_LIB/src/stm32f10x_exti.c	\
-$(SDK_DIR)/platform/hk/HK32F103/STD_LIB/src/stm32f10x_flash.c	\
 
 #APP
 SRC_APP = \
 handler/letter_shell \
-handler/nt_shell \
-gui/lvgl_app/lv_demos/src/lv_ex_get_started \
 gui/lvgl_app/lv_ui							\
+# gui/lvgl_app/lv_demos/src/lv_ex_get_started \
 # gui/lvgl_app/lv_demos/src/lv_demo_widgets \
 # handler/cmd_management \
+# handler/nt_shell \
 
 SRC_NTSHELL = \
 $(SDK_DIR)/components/ntshell/core		\
 $(SDK_DIR)/components/ntshell/util		\
 $(SDK_DIR)/components/ntshell/usrcmd	\
 
-
-SRC_LVGL = \
-$(SDK_DIR)/components/lvgl/porting	\
-$(SDK_DIR)/components/lvgl/src/lv_core	\
-$(SDK_DIR)/components/lvgl/src/lv_draw	\
-$(SDK_DIR)/components/lvgl/src/lv_font	\
-$(SDK_DIR)/components/lvgl/src/lv_gpu	\
-$(SDK_DIR)/components/lvgl/src/lv_hal	\
-$(SDK_DIR)/components/lvgl/src/lv_misc	\
-$(SDK_DIR)/components/lvgl/src/lv_themes	\
-$(SDK_DIR)/components/lvgl/src/lv_widgets	\
-
-#第三方库
-SRC_COMPONENTS = \
-$(SDK_DIR)/components/trace		\
-$(SDK_DIR)/components/app_scheduler	\
-$(SDK_DIR)/components/app_timer		\
-$(SDK_DIR)/components/letter-shell/src	\
-$(SDK_DIR)/components/cmbacktrace	\
-$(SRC_LVGL)
-
-
-#对应的底层接口
-SRC_CUSTOMIZED = \
-$(SDK_DIR)/customized/hal/usart		\
-$(SDK_DIR)/customized/hal/tftlcd		\
-$(SDK_DIR)/customized/hk_lib/f1/sys		\
-$(SDK_DIR)/customized/hk_lib/f1/usart	\
-$(SDK_DIR)/customized/hk_lib/f1/gpio	\
-$(SDK_DIR)/customized/hk_lib/f1/systick	\
-$(SDK_DIR)/customized/hk_lib/f1/timer	\
-$(SDK_DIR)/customized/hk_lib/f1/fsmc	\
-$(SDK_DIR)/customized/hk_lib/f1/i2c		\
-$(SDK_DIR)/customized/hk_lib/f1/sdio	\
-$(SDK_DIR)/customized/hk_lib/f1/exit	\
-$(SDK_DIR)/customized/hk_lib/f1/flash	\
-
-#driver
-SRC_DRIVERS = \
-$(SDK_DIR)/drivers/tftlcd/st7789		\
-$(SDK_DIR)/drivers/tftlcd/nt35510		\
-$(SDK_DIR)/drivers/tftlcd/ili9341		\
-$(SDK_DIR)/drivers/touch				\
-$(SDK_DIR)/drivers/eeprom				\
-$(SDK_DIR)/drivers/encoder				\
-
-SRC_EXTERNAL = \
-$(SDK_DIR)/external/fatfs/src		\
-$(SDK_DIR)/external/fatfs/src/option\
-# $(SDK_DIR)/external/fatfs/exfuns	\
-
-
 SRCDIRS	:= \
 $(SRC_APP) \
-$(SRC_COMPONENTS) \
-$(SRC_CUSTOMIZED) \
-$(SRC_DRIVERS)	  \
-$(SRC_EXTERNAL)
 
 CFILES := $(foreach dir, $(SRCDIRS), $(wildcard $(dir)/*.c))
 CFILENDIR	:= $(notdir  $(CFILES))
@@ -135,32 +69,15 @@ src/main.c 				\
 src/hk_peripheral.c 	\
 src/stm32f10x_it.c  	\
 core/system_stm32f10x.c	\
-$(SRC_STD_LIB)	\
 $(CFILENDIR)	\
-# $(SRC_LV_WIDGETS)	\
+$(CSRCS)
 
-VPATH			:= $(SRCDIRS)
+
+VPATH			+= $(SRCDIRS)
 
 ####################################################################
 # C includes
-# system include
-INC_SYSTEM = \
--I$(SDK_DIR)/platform/hk/HK32F103/STD_LIB/inc \
--I$(SDK_DIR)/platform/hk/HK32F103/CMSIS/CM3/DeviceSupport \
--I$(SDK_DIR)/platform/hk/HK32F103/CMSIS/CM3/CoreSupport	\
 
-INC_LVGL = \
--I$(SDK_DIR)/components/lvgl			\
--I$(SDK_DIR)/components/lvgl/src		\
--I$(SDK_DIR)/components/lvgl/src/lv_core	\
--I$(SDK_DIR)/components/lvgl/src/lv_draw	\
--I$(SDK_DIR)/components/lvgl/src/lv_font	\
--I$(SDK_DIR)/components/lvgl/src/lv_gpu	\
--I$(SDK_DIR)/components/lvgl/src/lv_misc	\
--I$(SDK_DIR)/components/lvgl/src/lv_hal	\
--I$(SDK_DIR)/components/lvgl/src/lv_themes	\
--I$(SDK_DIR)/components/lvgl/src/lv_widgets	\
--I$(SDK_DIR)/components/lvgl/porting	\
 
 # APP include
 INC_APP = \
@@ -177,52 +94,7 @@ INC_APP = \
 INC_COMPONENTS = \
 -I$(SDK_DIR)/components/util	\
 -I$(SDK_DIR)/components/lib_err	\
--I$(SDK_DIR)/components/letter-shell/src \
--I$(SDK_DIR)/components/ntshell/core \
--I$(SDK_DIR)/components/ntshell/usrcmd	\
--I$(SDK_DIR)/components/ntshell/util \
--I$(SDK_DIR)/components/trace	\
--I$(SDK_DIR)/components/app_timer	\
 -I$(SDK_DIR)/components/queue	\
--I$(SDK_DIR)/components/app_scheduler	\
--I$(SDK_DIR)/components/cmbacktrace	\
--I$(SDK_DIR)/components/cmbacktrace/Languages	\
-$(INC_LVGL) 
-
-INC_CUSTOMIZE = \
--I$(SDK_DIR)/customized/hal/gpio	\
--I$(SDK_DIR)/customized/hal/systick	\
--I$(SDK_DIR)/customized/hal/usart	\
--I$(SDK_DIR)/customized/hal/timer	\
--I$(SDK_DIR)/customized/hal/tftlcd	\
--I$(SDK_DIR)/customized/hal/i2c	\
--I$(SDK_DIR)/customized/hal/touch	\
--I$(SDK_DIR)/customized/hal/sdio	\
--I$(SDK_DIR)/customized/hal/exit	\
--I$(SDK_DIR)/customized/hal/flash	\
--I$(SDK_DIR)/customized/hk_lib/f1/sys	\
--I$(SDK_DIR)/customized/hk_lib/f1/usart	\
--I$(SDK_DIR)/customized/hk_lib/f1/gpio	\
--I$(SDK_DIR)/customized/hk_lib/f1/systick	\
--I$(SDK_DIR)/customized/hk_lib/f1/timer	\
--I$(SDK_DIR)/customized/hk_lib/f1/fsmc	\
--I$(SDK_DIR)/customized/hk_lib/f1/i2c	\
--I$(SDK_DIR)/customized/hk_lib/f1/sdio	\
--I$(SDK_DIR)/customized/hk_lib/f1/exit	\
--I$(SDK_DIR)/customized/hk_lib/f1/flash	\
-
-INC_DRIVER = \
--I$(SDK_DIR)/drivers/tftlcd/st7789 \
--I$(SDK_DIR)/drivers/tftlcd/nt35510 \
--I$(SDK_DIR)/drivers/tftlcd/ili9341		\
--I$(SDK_DIR)/drivers/touch		\
--I$(SDK_DIR)/drivers/eeprom		\
--I$(SDK_DIR)/drivers/encoder				\
-
-INC_EXTERNAL = \
--I$(SDK_DIR)/external/fatfs/src	\
--I$(SDK_DIR)/external/fatfs/exfuns	\
-# $(SDK_DIR)/external/fatfs			\
 
 C_INCLUDES =  \
 -Isrc \
@@ -230,11 +102,7 @@ C_INCLUDES =  \
 -Icore \
 -Ihandler \
 $(INC_APP)	\
-$(INC_SYSTEM)	\
-$(INC_COMPONENTS)	\
-$(INC_CUSTOMIZE)	\
-$(INC_DRIVER) 		\
-$(INC_EXTERNAL)		
+# $(INC_COMPONENTS)	\
 
 # ASM sources
 ASM_SOURCES =  \
@@ -352,10 +220,10 @@ OBJECTS += $(addprefix $(BUILD_DIR)/,$(notdir $(ASM_SOURCES:.s=.o)))
 vpath %.s $(sort $(dir $(ASM_SOURCES)))
 
 $(BUILD_DIR)/%.o: %.c Makefile | $(BUILD_DIR) 
-	$(CC) -c $(CFLAGS) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.c=.lst)) $< -o $@
+	$(CC) -c $(CFLAGS)  $(IFLAGS) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.c=.lst)) $< -o $@
 
 $(BUILD_DIR)/%.o: %.s Makefile | $(BUILD_DIR)
-	$(AS) -c $(CFLAGS) $< -o $@
+	$(AS) -c $(CFLAGS)  $(IFLAGS) $< -o $@
 
 $(BUILD_DIR)/$(TARGET).elf: $(OBJECTS) Makefile
 	$(CC) $(OBJECTS) $(LDFLAGS) -o $@
@@ -377,7 +245,7 @@ clean:
 	-rm -fR $(BUILD_DIR)
 
 echo:
-	@echo $(CFILENDIR)
+	@echo $(IFLAGS)
 
 #######################################
 # dependencies
