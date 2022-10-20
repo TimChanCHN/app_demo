@@ -12,6 +12,7 @@
 #include "encoder.h"
 #include "flash.h"
 #include "dma.h"
+#include "adc.h"
 
 extern exit_object_t g_exit0_obj;
 extern exit_object_t g_exit1_obj;
@@ -19,6 +20,7 @@ extern exit_object_t g_exit13_obj;
 
 extern usart_object_t g_usart_object;
 extern gpio_object_t g_led_obj;
+extern gpio_object_t g_dig_tube_obj;
 extern systick_object_t g_systick_obj;
 extern timer_object_t   g_timer3_object;
 extern tftlcd_object_t g_tftlcd_obj;
@@ -37,5 +39,7 @@ extern encoder_object_t g_encoder_obj;
 extern flash_object_t g_flash_obj;
 
 extern dma_object_t g_dma_obj;
+
+extern adc_object_t g_adc_obj;
 
 #endif

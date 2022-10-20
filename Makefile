@@ -48,6 +48,7 @@ include ../sdk/sdk.mk
 SRC_APP = \
 handler/letter_shell \
 gui/lvgl_app/lv_ui							\
+handler/digital_tube	 \
 # gui/lvgl_app/lv_demos/src/lv_ex_get_started \
 # gui/lvgl_app/lv_demos/src/lv_demo_widgets \
 # handler/cmd_management \
@@ -88,6 +89,7 @@ INC_APP = \
 -Igui/lvgl_app/lv_demos		\
 -Igui/lvgl_app/lv_demos/src/lv_ex_get_started		\
 -Igui/lvgl_app/lv_ui								\
+-Ihandler/digital_tube	 \
 
 
 # 第三方库头文件

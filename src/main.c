@@ -9,75 +9,75 @@
 #include "app_timer.h"
 #include "hk_peripheral.h"
 
-#include "lv_obj.h"
-#include "lv_port_disp.h"
-#include "lv_port_indev.h"
-#include "lv_port_fs.h"
-
-#include "lv_ui.h"
-#include "lv_ex_get_started.h"
-
-#include "24cxx.h"
-#include "gt9147.h"
 #include <stdlib.h>
 
 #include "cm_backtrace.h"
 
-#include "hk_exit.h"
+#include "digital_tube.h"
 
 #define HARDWARE_VERSION "V1.0.0" 
 #define SOFTWARE_VERSION "V0.1.0"
 
+#define LEVEL_0			0
+#define LEVEL_1			1
+#define LEVEL_2			2
+#define LEVEL_3			3
+
 TIMER_DEF(m_test_timer);
-
-#if 0
-LV_FONT_DECLARE(fontCHN12);
-
-void show_my_font(void)
-{
-	static lv_style_t style_font;
-	lv_style_init(&style_font);
-	lv_style_set_text_font(&style_font, LV_STATE_DEFAULT, &fontCHN12);  //样式使用自定义字体
-	lv_style_set_text_color(&style_font, LV_STATE_DEFAULT, LV_COLOR_BLACK);   //设置字体颜色
-
-
-    lv_obj_t * btn = lv_btn_create(lv_scr_act(), NULL);     /*Add a button the current screen*/
-    lv_obj_set_pos(btn, 0, 0);                            /*Set its position*/
-    lv_obj_set_size(btn, 100, 200);                          /*Set its size*/
-    // lv_obj_set_event_cb(btn, btn_event_cb);                 /*Assign a callback to the button*/
-
-    lv_obj_t * label = lv_label_create(btn, NULL);          /*Add a label to the button*/
-    lv_label_set_text(label, "我");                     /*Set the labels text*/
-	lv_obj_add_style(label, LV_OBJ_PART_MAIN, &style_font);
-}
-#endif
+uint8_t g_tube_status = 0;
+typedef void (*p_fun)(void);
+p_fun func_light_ctrl[4];
 
 void test_timer_handler(void *p_data)
 {
-    static bool is_led_off = false;
+	uint8_t vbat = 1;
+	uint8_t voltage_level;
 
-	menu_status_handler();
+	if (vbat < 2)
+	{
+		voltage_level = LEVEL_0;
+	}
+	else if (vbat < 3)
+	{
+		voltage_level = LEVEL_1;
+	}
+	else if (vbat < 4)
+	{
+		voltage_level = LEVEL_2;
+	}
+	else
+	{
+		voltage_level = LEVEL_3;
+	}
 
-    if(is_led_off)
-    {
-        g_led_obj.gpio_ops.gpio_output_set(&g_led_obj.gpio_cfg, is_led_off);
-        is_led_off = false;
-    }
-    else
-    {
-        g_led_obj.gpio_ops.gpio_output_set(&g_led_obj.gpio_cfg, is_led_off);
-        is_led_off = true;
-    }
+	if (g_tube_status == 3)
+	{
+		g_tube_status = voltage_level-1;
+	}
+	g_tube_status++;
 
-    // trace_debug("ticks = %lu \n\r", (uint32_t)g_timer3_object.timer_cfg.ticks);
+	uint16_t adc_value = 0;
+
+	g_adc_obj.adc_ops.adc_value_get(&g_adc_obj.adc_cfg, &adc_value);
+
+	trace_info("adc value = %d\r\n", adc_value);
+	trace_info("adc volt = %d mV\r\n", adc_value * 3300 / 4096);
 }
 
 int main(void)
 {
+	func_light_ctrl[0] = display_boader;
+	func_light_ctrl[1] = display_battery1;
+	func_light_ctrl[2] = display_battery2;
+	func_light_ctrl[3] = display_battery3;
+
 	g_systick_obj.systick_ops.systick_init(&g_systick_obj.systick_cfg);
 	g_led_obj.gpio_ops.gpio_init(&g_led_obj.gpio_cfg);
 	g_led_obj.gpio_ops.gpio_output_set(&g_led_obj.gpio_cfg, 1);
 
+	g_dig_tube_obj.gpio_ops.gpio_init(&g_dig_tube_obj.gpio_cfg);
+
+	g_adc_obj.adc_ops.adc_init(&g_adc_obj.adc_cfg);
 
 	trace_init();
 	letter_shell_init();
@@ -85,47 +85,13 @@ int main(void)
 
 	TIMER_INIT(&g_timer3_object);
 	TIMER_CREATE(&m_test_timer, false, false, test_timer_handler);
-	TIMER_START(m_test_timer, 200);
-
-	eeprom_init(&eeprom_obj);
-	while (eeprom_check(&eeprom_obj))
-	{
-		trace_info("eeprom init fail.\r\n");
-		trace_info("keep checking\r\n");
-	}
-	trace_info("eeprom:24c02 is ok.\r\n");
-	read_data_from_mem();
-
-	encoder_init(&g_encoder_obj);
-
-	// lvgl设置
-	#if 1
-	lv_init();
-	lv_port_disp_init();
-	// lv_port_indev_init();
-	// lv_port_fs_init();
-
-	trace_info("loop\r\n");
-	trace_debug("debug\r\n");
-
-	// monitor heap_stack
-	extern unsigned int _user_heap_stack_start;
-	extern unsigned int _user_heap_stack_end;
-	unsigned int start_value, end_value;
-	start_value = (unsigned int)&_user_heap_stack_start;
-	end_value = (unsigned int)&_user_heap_stack_end;
-	trace_info("user heap stack start : 0x%x\r\n", start_value);
-	trace_info("user heap stack end   : 0x%x\r\n", end_value);
-
-	// ui 
-	main_menu();   
-	#endif
+	TIMER_START(m_test_timer, 1000);
 
 	while (1)
 	{
 		letter_shell_loop_task();
 		TIMER_SCHEDULER_LOOP();
 
-		lv_task_handler();
+		func_light_ctrl[g_tube_status](); 
 	}
 }

@@ -12,6 +12,7 @@
 #include "hk_exit.h"
 #include "hk_flash.h"
 #include "hk_dma.h"
+#include "hk_adc.h"
 
 #include "gt9147.h"
 #include "st7789_8080.h"
@@ -95,6 +96,24 @@ gpio_object_t g_led_obj = {
         .gpio_clk = LED_PORT_PERIPH_CLK,
         .p_port = (void *)LED_PORT,
         .gpio_pin = LED_PIN,
+        .gpio_dir = GPIO_DIR_OUTPUR,
+        .flag = GPIO_TYPE_IO,
+    },
+
+    .gpio_ops = {
+        .gpio_init = hk_gpio_obj_init,
+        .gpio_output_set = hk_gpio_obj_out_set,
+        .gpio_fix_input = hk_gpio_fix_input,
+        .gpio_fix_output = hk_gpio_fix_output,
+    },
+};
+
+/********************  digital tube  ********************/
+gpio_object_t g_dig_tube_obj = {
+    .gpio_cfg = {
+        .gpio_clk = DIGITAL_PERIPH_CLK,
+        .p_port = (void *)DIGITAL_PORT,
+        .gpio_pin = DIGITAL_PIN,
         .gpio_dir = GPIO_DIR_OUTPUR,
         .flag = GPIO_TYPE_IO,
     },
@@ -1005,3 +1024,48 @@ flash_object_t g_flash_obj = {
 //         .dma_transfer_ctrl = hk_dma_transfer_ctrl,
 //     },
 // };
+
+/********************  ADC  ********************/
+gpio_object_t g_adc_in7_pin = {
+    .gpio_cfg = {
+        .gpio_clk   = RCC_APB2Periph_GPIOC,
+        .p_port     = (void *)GPIOC,
+        .gpio_pin   = GPIO_Pin_1,
+        .gpio_dir   = GPIO_DIR_INPUT,
+        .flag       = GPIO_TYPE_IO,
+        .mode       = GPIO_Mode_AIN,
+    },
+
+    .gpio_ops = {
+        .gpio_init = hk_gpio_obj_init,
+        .gpio_output_set = hk_gpio_obj_out_set,
+        .gpio_fix_input = hk_gpio_fix_input,
+        .gpio_fix_output = hk_gpio_fix_output,
+    },
+};
+
+hk_adc_cfg g_adc_in7_cfg = {
+    .adc_scanconv_mode      = DISABLE,
+    .adc_continuous_mode    = DISABLE,
+    .adc_channel_num        = 1,     
+    .adc_mode               = ADC_Mode_Independent,         
+    .adc_trigger            = ADC_ExternalTrigConv_None,
+    .adc_data_align         = ADC_DataAlign_Right,
+    .adc_clk                = RCC_APB2Periph_ADC3,
+    .adc_pclk_div           = RCC_PCLK2_Div6,
+    .adc_type               = ADC3,
+};
+
+adc_object_t g_adc_obj = {
+    .adc_cfg = {
+        .p_pin_cfg  = (void *)&g_adc_in7_pin,
+        .p_adc_cfg  = (void *)&g_adc_in7_cfg,
+        .channel    = ADC_Channel_11,
+    },
+    .adc_ops = {
+        .adc_init       = hk_adc1_init,
+        .adc_enable     = hk_adc1_enable,
+        .adc_disable    = hk_adc1_disable,
+        .adc_value_get  = hk_adc_value_get,
+    }
+};

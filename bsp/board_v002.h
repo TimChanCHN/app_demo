@@ -147,4 +147,24 @@
 #define EEPROM_SCL_PORT                          GPIOB
 #define EEPROM_SCL_PERIPH_CLK                    RCC_APB2Periph_GPIOB
 
+/* Digital tube */
+// sda --> PB7, scl --> PB6
+#define DIGITAL_PIN1                             GPIO_Pin_0
+#define DIGITAL_PIN2                             GPIO_Pin_1
+#define DIGITAL_PIN3                             GPIO_Pin_2
+#define DIGITAL_PIN4                             GPIO_Pin_3
+#define DIGITAL_PIN5                             GPIO_Pin_4
+#define DIGITAL_PIN6                             GPIO_Pin_5
+#define DIGITAL_PIN7                             GPIO_Pin_6
+
+
+#define DIGITAL_PIN                              (DIGITAL_PIN1 | DIGITAL_PIN2 | DIGITAL_PIN3 | DIGITAL_PIN4 | DIGITAL_PIN5 | DIGITAL_PIN6 | DIGITAL_PIN7)
+#define DIGITAL_PORT                             GPIOA
+#define DIGITAL_PERIPH_CLK                       RCC_APB2Periph_GPIOA
+
+/* ADC */
+#define AI7_PIN                                  GPIO_Pin_7
+#define AI7_PORT                                 GPIOA
+#define AI7_PERIPH_CLK                           RCC_APB2Periph_GPIOA
+
 #endif
