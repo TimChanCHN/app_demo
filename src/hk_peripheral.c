@@ -1028,9 +1028,9 @@ flash_object_t g_flash_obj = {
 /********************  ADC  ********************/
 gpio_object_t g_adc_in7_pin = {
     .gpio_cfg = {
-        .gpio_clk   = RCC_APB2Periph_GPIOC,
-        .p_port     = (void *)GPIOC,
-        .gpio_pin   = GPIO_Pin_1,
+        .gpio_clk   = RCC_APB2Periph_GPIOA,
+        .p_port     = (void *)GPIOA,
+        .gpio_pin   = GPIO_Pin_7 | GPIO_Pin_0,
         .gpio_dir   = GPIO_DIR_INPUT,
         .flag       = GPIO_TYPE_IO,
         .mode       = GPIO_Mode_AIN,
@@ -1044,28 +1044,69 @@ gpio_object_t g_adc_in7_pin = {
     },
 };
 
+uint32_t g_chn_map[] = {
+    ADC_Channel_7,
+    ADC_Channel_0
+};
+
 hk_adc_cfg g_adc_in7_cfg = {
-    .adc_scanconv_mode      = DISABLE,
-    .adc_continuous_mode    = DISABLE,
-    .adc_channel_num        = 1,     
+    .adc_scanconv_mode      = ENABLE,
+    .adc_continuous_mode    = ENABLE,
     .adc_mode               = ADC_Mode_Independent,         
     .adc_trigger            = ADC_ExternalTrigConv_None,
     .adc_data_align         = ADC_DataAlign_Right,
-    .adc_clk                = RCC_APB2Periph_ADC3,
-    .adc_pclk_div           = RCC_PCLK2_Div6,
-    .adc_type               = ADC3,
+    .adc_clk                = RCC_APB2Periph_ADC1,
+    .adc_pclk_div           = RCC_PCLK2_Div8,
+    .adc_type               = ADC1,
+
+    .adc_channel_num        = sizeof(g_chn_map)/sizeof(g_chn_map[0]),     
+    .adc_chn_list           = g_chn_map,
+
+    .adc_irq_enable         = DISABLE,
+    .adc_irqn               = ADC1_2_IRQn,
+    .adc_irq_pre_prio       = 1,
+    .adc_irq_sub_prio       = 1,
+    
+    .adc_dma_enable         = ENABLE,
 };
 
 adc_object_t g_adc_obj = {
     .adc_cfg = {
         .p_pin_cfg  = (void *)&g_adc_in7_pin,
         .p_adc_cfg  = (void *)&g_adc_in7_cfg,
-        .channel    = ADC_Channel_11,
     },
     .adc_ops = {
         .adc_init       = hk_adc1_init,
         .adc_enable     = hk_adc1_enable,
         .adc_disable    = hk_adc1_disable,
         .adc_value_get  = hk_adc_value_get,
+        .adc_irq_cb     = adc_handler,
     }
+};
+
+// adc dma
+// DMA_DIR_PeripheralDST ,MEM 2 PER;
+// DMA_DIR_PeripheralSRC ,PER 2 MEM;
+DMA_InitTypeDef adc_dma_cfg = {
+	.DMA_DIR 					= DMA_DIR_PeripheralSRC,  		    //数据传输方向，外设到内存
+	.DMA_BufferSize 			= sizeof(g_chn_map)/sizeof(g_chn_map[0]),    //DMA通道的DMA缓存的大小
+	.DMA_PeripheralInc 		    = DMA_PeripheralInc_Disable,  	    //外设地址寄存器不变
+	.DMA_MemoryInc 			    = DMA_MemoryInc_Enable,			    //内存地址寄存器递增
+	.DMA_PeripheralDataSize 	= DMA_PeripheralDataSize_HalfWord,  //数据宽度为32位
+	.DMA_MemoryDataSize 		= DMA_MemoryDataSize_HalfWord, 		//数据宽度为32位
+	.DMA_Mode 					= DMA_Mode_Circular,  			    //工作在正常缓存模式
+	.DMA_Priority 				= DMA_Priority_High, 			    //DMA通道 x拥有高优先级 
+	.DMA_M2M 					= DMA_M2M_Disable,  			    //DMA通道x没有设置为内存到内存传输
+};
+
+dma_object_t g_adc_dma_obj = {
+    .dma_cfg = {
+        .dma_clk = RCC_AHBPeriph_DMA1,
+        .dma_param = (void *)&adc_dma_cfg,
+        .channel = DMA1_Channel1,
+    },
+    .dma_ops = {
+        .dma_init = hk_dma_obj_init,
+        .dma_transfer_ctrl = hk_dma_transfer_ctrl,
+    },
 };

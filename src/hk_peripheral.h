@@ -41,5 +41,6 @@ extern flash_object_t g_flash_obj;
 extern dma_object_t g_dma_obj;
 
 extern adc_object_t g_adc_obj;
+extern dma_object_t g_adc_dma_obj;
 
 #endif
