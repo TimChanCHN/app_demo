@@ -10,6 +10,7 @@
 #include "hk_peripheral.h"
 
 #include "hk_adc.h"
+#include "hk_timer.h"
 
 #include <stdlib.h>
 
@@ -60,6 +61,7 @@ void test_timer_handler(void *p_data)
 	}
 	g_tube_status++;
 
+	#if 1
 	hk_adc_cfg *p_hk_adc_cfg = (hk_adc_cfg *)g_adc_obj.adc_cfg.p_adc_cfg;
 	adc_value[0] = p_hk_adc_cfg->adc_value[0];
 	adc_value[1] = p_hk_adc_cfg->adc_value[1];
@@ -71,6 +73,22 @@ void test_timer_handler(void *p_data)
 	trace_info("adc[1] volt = %d mV\r\n", adc_value[1] * 3300 / 4096);
 	trace_info("\r\n");
 	trace_info("\r\n");
+	#else
+	uint16_t value = 0;
+	hk_adc_cfg *p_hk_adc_cfg = (hk_adc_cfg *)g_adc_obj.adc_cfg.p_adc_cfg;
+	g_adc_obj.adc_ops.adc_value_get(&g_adc_obj.adc_cfg, &value);
+	g_adc_obj.adc_ops.adc_value_get(&g_adc_obj.adc_cfg, &value);
+	adc_value[0] = p_hk_adc_cfg->adc_value[0];
+	adc_value[1] = p_hk_adc_cfg->adc_value[1];
+
+	trace_info("adc[0] value = %d\r\n", adc_value[0]);
+	trace_info("adc[0] volt = %d mV\r\n", adc_value[0] * 3300 / 4096);
+	trace_info("\r\n");
+	trace_info("adc[1] value = %d\r\n", adc_value[1]);
+	trace_info("adc[1] volt = %d mV\r\n", adc_value[1] * 3300 / 4096);
+	trace_info("\r\n");
+	trace_info("\r\n");
+	#endif
 
 }
 
@@ -92,6 +110,7 @@ int main(void)
 	letter_shell_init();
 	cm_backtrace_init("app", HARDWARE_VERSION, SOFTWARE_VERSION);
 
+	TIM2_Configuration();
 	g_adc_obj.adc_ops.adc_init(&g_adc_obj.adc_cfg);
 
 	// adc dma setting
@@ -103,7 +122,6 @@ int main(void)
 	TIMER_INIT(&g_timer3_object);
 	TIMER_CREATE(&m_test_timer, false, false, test_timer_handler);
 	TIMER_START(m_test_timer, 2000);
-
 	while (1)
 	{
 		letter_shell_loop_task();

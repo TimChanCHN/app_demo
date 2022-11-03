@@ -1050,14 +1050,17 @@ uint32_t g_chn_map[] = {
 };
 
 hk_adc_cfg g_adc_in7_cfg = {
-    .adc_scanconv_mode      = ENABLE,
-    .adc_continuous_mode    = ENABLE,
+    .adc_scanconv_mode      = DISABLE,
+    .adc_continuous_mode    = DISABLE,
     .adc_mode               = ADC_Mode_Independent,         
-    .adc_trigger            = ADC_ExternalTrigConv_None,
+    .adc_trigger            = ADC_ExternalTrigConv_T2_CC2,
     .adc_data_align         = ADC_DataAlign_Right,
     .adc_clk                = RCC_APB2Periph_ADC1,
     .adc_pclk_div           = RCC_PCLK2_Div8,
     .adc_type               = ADC1,
+    
+    .adc_disc_enable        = DISABLE,
+    .adc_disc_num           = 1,
 
     .adc_channel_num        = sizeof(g_chn_map)/sizeof(g_chn_map[0]),     
     .adc_chn_list           = g_chn_map,
