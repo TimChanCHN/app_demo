@@ -62,17 +62,17 @@ void test_timer_handler(void *p_data)
 	g_tube_status++;
 
 	#if 1
-	hk_adc_cfg *p_hk_adc_cfg = (hk_adc_cfg *)g_adc_obj.adc_cfg.p_adc_cfg;
-	adc_value[0] = p_hk_adc_cfg->adc_value[0];
-	adc_value[1] = p_hk_adc_cfg->adc_value[1];
+	// hk_adc_cfg *p_hk_adc_cfg = (hk_adc_cfg *)g_adc_obj.adc_cfg.p_adc_cfg;
+	// adc_value[0] = p_hk_adc_cfg->adc_value[0];
+	// adc_value[1] = p_hk_adc_cfg->adc_value[1];
 
-	trace_info("adc[0] value = %d\r\n", adc_value[0]);
-	trace_info("adc[0] volt = %d mV\r\n", adc_value[0] * 3300 / 4096);
-	trace_info("\r\n");
-	trace_info("adc[1] value = %d\r\n", adc_value[1]);
-	trace_info("adc[1] volt = %d mV\r\n", adc_value[1] * 3300 / 4096);
-	trace_info("\r\n");
-	trace_info("\r\n");
+	// trace_info("adc[0] value = %d\r\n", adc_value[0]);
+	// trace_info("adc[0] volt = %d mV\r\n", adc_value[0] * 3300 / 4096);
+	// trace_info("\r\n");
+	// trace_info("adc[1] value = %d\r\n", adc_value[1]);
+	// trace_info("adc[1] volt = %d mV\r\n", adc_value[1] * 3300 / 4096);
+	// trace_info("\r\n");
+	// trace_info("\r\n");
 	#else
 	uint16_t value = 0;
 	hk_adc_cfg *p_hk_adc_cfg = (hk_adc_cfg *)g_adc_obj.adc_cfg.p_adc_cfg;
@@ -111,17 +111,17 @@ int main(void)
 	cm_backtrace_init("app", HARDWARE_VERSION, SOFTWARE_VERSION);
 
 	TIM2_Configuration();
-	g_adc_obj.adc_ops.adc_init(&g_adc_obj.adc_cfg);
+	// g_adc_obj.adc_ops.adc_init(&g_adc_obj.adc_cfg);
 
 	// adc dma setting
-	hk_adc_cfg *p_hk_adc_cfg = (hk_adc_cfg *)g_adc_obj.adc_cfg.p_adc_cfg;
-	g_adc_dma_obj.dma_ops.dma_init(&g_adc_dma_obj.dma_cfg, (uint32_t)(&(ADC1->DR)), (uint32_t)(p_hk_adc_cfg->adc_value), 
-									p_hk_adc_cfg->adc_channel_num, DMA_DIR_PeripheralSRC);
-	g_adc_dma_obj.dma_ops.dma_transfer_ctrl(&g_adc_dma_obj.dma_cfg, ENABLE);
+	// hk_adc_cfg *p_hk_adc_cfg = (hk_adc_cfg *)g_adc_obj.adc_cfg.p_adc_cfg;
+	// g_adc_dma_obj.dma_ops.dma_init(&g_adc_dma_obj.dma_cfg, (uint32_t)(&(ADC1->DR)), (uint32_t)(p_hk_adc_cfg->adc_value), 
+	// 								p_hk_adc_cfg->adc_channel_num, DMA_DIR_PeripheralSRC);
+	// g_adc_dma_obj.dma_ops.dma_transfer_ctrl(&g_adc_dma_obj.dma_cfg, ENABLE);
 
 	TIMER_INIT(&g_timer3_object);
 	TIMER_CREATE(&m_test_timer, false, false, test_timer_handler);
-	TIMER_START(m_test_timer, 2000);
+	TIMER_START(m_test_timer, 1000);
 	while (1)
 	{
 		letter_shell_loop_task();
