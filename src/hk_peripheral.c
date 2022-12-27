@@ -614,7 +614,7 @@ tftlcd_object_t g_tftlcd3510_obj = {
 };
 
 
-tftlcd_object_t *g_tftlcd_lvgl_obj = &g_tftlcd7789_obj;
+tftlcd_object_t *g_tftlcd_lvgl_obj = &g_tftlcd3510_obj;
 
 /********************  touch setting:9147  ********************/
 tp_dev_t g_tp_dev = {

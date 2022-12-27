@@ -118,7 +118,7 @@ int main(void)
 	trace_info("user heap stack end   : 0x%x\r\n", end_value);
 
 	// ui 
-	main_menu();   
+	// main_menu();   
 	#endif
 
 	while (1)
@@ -126,6 +126,6 @@ int main(void)
 		letter_shell_loop_task();
 		TIMER_SCHEDULER_LOOP();
 
-		lv_task_handler();
+		// lv_task_handler();
 	}
 }
