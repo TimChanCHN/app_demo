@@ -577,7 +577,7 @@ tftlcd_driver_t g_lcd35510_driver = {
         .height = 800,
         .id = 0,
         .dir = 1,               // 1:横屏， 0:竖屏
-        .background_color = RED,
+        .background_color = BLACK,
         .point_color = BLUE,
     },
 };
@@ -603,6 +603,7 @@ tftlcd_object_t g_tftlcd3510_obj = {
         .write_ram_pre  = nt35510_write_ram_pre,
         .write_ram      = nt35510_write_ram,
         .set_scan_dir   = nt35510_set_scan_dir,
+        .read_point     = nt35510_read_point,
 
         // 公有函数
         .clear_screen   = tftlcd_clear_screen,
