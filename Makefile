@@ -36,6 +36,11 @@ endif
 
 $(info PLATFORM: $(PLATFORM))
 
+# .mk option
+# 当显示图片时，要么选择LVGL，要么选择外接库
+# 使能lvgl时，little malloc也不要使用
+export LVGL_ENABLE := 
+
 # 文件添加在sdk.mk中实现
 include ../sdk/sdk.mk
 
@@ -45,13 +50,15 @@ include ../sdk/sdk.mk
 # C sources
 
 #APP
-SRC_APP = \
+SRC_APP := \
 handler/letter_shell \
-gui/lvgl_app/lv_ui							\
-# gui/lvgl_app/lv_demos/src/lv_ex_get_started \
-# gui/lvgl_app/lv_demos/src/lv_demo_widgets \
-# handler/cmd_management \
-# handler/nt_shell \
+
+
+ifdef LVGL_ENABLE
+SRC_APP += gui/lvgl_app
+else
+SRC_APP += gui/display_app
+endif
 
 SRC_NTSHELL = \
 $(SDK_DIR)/components/ntshell/core		\
@@ -82,9 +89,10 @@ VPATH			+= $(SRCDIRS)
 # APP include
 INC_APP = \
 -Ihandler/cmd_management	\
--Ihandler/letter_shell	\
--Ihandler/nt_shell	\
--Igui/lvgl_app/		\
+-Ihandler/letter_shell		\
+-Ihandler/nt_shell			\
+-Igui/display_app			\
+-Igui/lvgl_app/				\
 -Igui/lvgl_app/lv_demos		\
 -Igui/lvgl_app/lv_demos/src/lv_ex_get_started		\
 -Igui/lvgl_app/lv_ui								\
@@ -122,7 +130,11 @@ C_DEFS =  \
 -DBOARD_V002	\
 -DSTM32F10X_HD	\
 -DTRACE_ENABLE	\
--DTRACE_LEVEL=5
+-DTRACE_LEVEL=5 \
+
+ifdef LVGL_ENABLE
+C_DEFS += -DLVGL_ENABLE	
+endif
 
 
 #######################################
