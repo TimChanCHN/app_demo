@@ -10,15 +10,24 @@ FILINFO picfile_info;
 
 uint16_t pic_get_tnum(uint8_t *path)
 {	  
-	uint8_t res;
-	uint16_t rval=0;
+	uint8_t res = 1;
+	uint16_t rval = 0;
  	DIR tdir;	 		//临时目录
 	FILINFO tfileinfo;	//临时文件信息	
 	uint8_t *fn;	 	
     
-    res = f_opendir(&tdir, (const TCHAR*)path); 	             //打开目录
+    while (f_opendir(&tdir, "0:/picture"))//打开图片文件夹
+	{	    
+		trace_info("PICTURE文件夹错误!\r\n");
+		g_systick_obj.systick_ops.delay_ms(3000);			  		  
+	}  
+
+    // res = f_opendir(&tdir, (const TCHAR*)path); 	             //打开目录
   	tfileinfo.lfsize = _MAX_LFN*2 + 1;				             //长文件名最大长度
 	tfileinfo.lfname = little_malloc(SRAMIN, tfileinfo.lfsize);   //为长文件缓存区分配内存
+
+    trace_info("path = %s\r\n", path);
+    trace_info("res = %d\r\n", res);
 
 	if ((res == FR_OK) && (tfileinfo.lfname != NULL))
 	{

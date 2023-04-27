@@ -73,13 +73,42 @@ void peripheral_init(void)
 
 	TIMER_INIT(&g_timer3_object);
 	TIMER_CREATE(&m_test_timer, false, false, test_timer_handler);
-	TIMER_START(m_test_timer, 200);
+	// TIMER_START(m_test_timer, 200);
 
 #ifndef LVGL_ENABLE
+    FRESULT fres = FR_OK;
+	DIR tdir;	 		//临时目录
+
+
+	g_tftlcd_lvgl_obj->tftlcd_ops.init(&g_tftlcd_lvgl_obj->tftlcd_cfg, &g_tftlcd_lvgl_obj->tftlcd_ops);
 	little_mem_init(SRAMIN);
 	exfuns_init();
-	f_mount(fs[0],"0:",1); 		//挂载SD卡 
+
+    while (g_sdio_obj.sdio_ops.sd_init(&g_sdio_obj.sdio_cfg))
+    {
+        g_systick_obj.systick_ops.delay_ms(1000);
+        trace_info("sd init fail...\r\n");
+    }
+    trace_info("sd init ok...\r\n");
+
+    fres = f_mount(fs[0], "0:", 1);
+    while (fres)
+    {
+        g_systick_obj.systick_ops.delay_ms(1000);
+        trace_info("mount sd error: %d\r\n", fres);
+        fres = f_mount(fs[0], "1:", 1);
+    }
+    trace_info("mount sd successful\r\n");
+
+    while (f_opendir(&tdir, "1:/picture"))//打开图片文件夹
+	{	    
+		trace_info("PICTURE文件夹错误!\r\n");
+		g_systick_obj.systick_ops.delay_ms(3000);			  		  
+	}  
+
+	// f_mount(fs[0], "0:", 1); 		//挂载SD卡 
 #endif
+
 
 	// 3. high level外设初始化
 	eeprom_init(&eeprom_obj);
